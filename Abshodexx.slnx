@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="API/API.csproj" />
   <Project Path="Bot/Bot.csproj" Id="2284cdc9-8920-47e1-af90-c57cbfdeb091" />
+  <Project Path="Common/Common.csproj" />
 </Solution>
