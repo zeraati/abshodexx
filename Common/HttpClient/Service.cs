@@ -1,59 +1,51 @@
-﻿using System.Net.Http.Json;
-using System.Net.Http.Headers;
+﻿using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 
 namespace Common.HttpClient;
 
-public class HttpClientService(ILogger<HttpClientService> logger, System.Net.Http.HttpClient client)
+public partial class HttpClientService(ILogger<HttpClientService> logger, System.Net.Http.HttpClient client)
 {
-    public async Task<HttpClientResponse<TResult>> Send<TResult>(HttpClientRequest userRequest, CancellationToken cancellation)
+    public Task<HttpClientResponse<TResponse>> Send<TResponse>(HttpClientRequest clientRequest, CancellationToken cancellation)
     {
-        var result = new HttpClientResponse<TResult>();
+        return Core<HttpClientResponse<TResponse>>(clientRequest, cancellation);
+    }
+
+    public Task<HttpClientResponse> Send(HttpClientRequest clientRequest, CancellationToken cancellation)
+    {
+        return Core<HttpClientResponse>(clientRequest, cancellation);
+    }
+
+    public async Task<Response> Core<Response>(HttpClientRequest clientRequest, CancellationToken cancellation)
+        where Response : HttpClientResponse, new()
+    {
+        using var request = clientRequest.CreateRequest(out var bodyJson);
+        LogRequest(request, bodyJson);
+
+        var watch = Stopwatch.StartNew();
+        var clientResponse = new Response();
 
         try
         {
-            logger.LogInformationCustom($"Sending POST request to {userRequest.Url}");
+            using var response = await client.SendAsync(request, cancellation);
+            watch.Stop();
+            await clientResponse.Set(response, cancellation);
 
-            var request = new HttpRequestMessage(userRequest.Method, userRequest.Url);
-
-            if (userRequest.Body != null)
-            {
-                request.Content = JsonContent.Create(userRequest.Body);
-                logger.LogInformationCustom($"Body :{Util.Json.Serialize(userRequest.Body)}");
-            }
-
-            if (userRequest.Token != null)
-            {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", userRequest.Token);
-                logger.LogInformationCustom($"Token :{userRequest.Token}");
-            }
-
-            if (userRequest.ApiKey != null)
-            {
-                request.Headers.Add("XAPIKEY", userRequest.ApiKey);
-                logger.LogInformationCustom($"ApiKey :{userRequest.ApiKey}");
-            }
-
-
-            logger.LogInformationCustom($"Request :{Util.Json.Serialize(request)}");
-            var response = await client.SendAsync(request);
-            logger.LogInformationCustom($"Response Code :{response.StatusCode}");
-
-            result.StatusCode = response.StatusCode;
-            result.StringResponse = await response.Content.ReadAsStringAsync();
-
-            if (response.IsSuccessStatusCode && !string.IsNullOrEmpty(result.StringResponse))
-            {
-                result.Response = await response.Content.ReadFromJsonAsync<TResult>();
-            }
+            LogResponse(request, response, clientResponse.ResponseContent, watch);
         }
-        catch (Exception exception)
+
+        catch (Exception exception) when (exception is HttpRequestException or TaskCanceledException)
         {
-            logger.LogError($"Response Exception :{exception.ToString()}");
-            throw new Exception("POST Request to :"+userRequest.Url,exception);
+            clientResponse.IsSuccess = false;
+            clientResponse.ResponseContent = $"Request failed: {exception.Message}, ResponseContent: {clientResponse.ResponseContent}";
         }
 
-        return result;
+        finally
+        {
+            watch.Stop();
+            clientResponse.DurationMs = watch.ElapsedMilliseconds;
+        }
+
+        return clientResponse;
     }
 }
 

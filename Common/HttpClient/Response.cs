@@ -1,14 +1,36 @@
-﻿using System.Net;
+﻿using System.Text.Json;
 
 namespace Common.HttpClient;
 
-public class HttpClientResponse<TResponse>
+public class HttpClientResponse
 {
-    public HttpStatusCode StatusCode { get; set; }
-    public TResponse? Response { get; set; }
-    public string? StringResponse { get; set; }
+    public HttpClientResponse() { }
+
+    public virtual async Task Set(HttpResponseMessage response, CancellationToken cancellation)
+    {
+        IsSuccess = response.IsSuccessStatusCode;
+        StatusCode = (int)response.StatusCode;
+        ReasonPhrase = response.ReasonPhrase;
+        ResponseContent = await response.Content.ReadAsStringAsync(cancellation);
+    }
+
+    public string ResponseContent { get; set; } = null!;
+    public bool IsSuccess { get; set; }
+    public int? StatusCode { get; private set; }
+    public string? ReasonPhrase { get; private set; }
+    public long DurationMs { get; set; }
 }
 
+public class HttpClientResponse<TResponse> : HttpClientResponse
+{
+    public override async Task Set(HttpResponseMessage response, CancellationToken cancellation)
+    {
+        await base.Set(response, cancellation);
+        if (IsSuccess == false || string.IsNullOrWhiteSpace(ResponseContent)) return;
 
+        try { Response = Util.Json.Deserialize<TResponse>(ResponseContent); }
+        catch (JsonException exception) { ResponseContent = $"Deserialization failed: {exception.Message}, ResponseContent: {ResponseContent}"; }
+    }
 
-
+    public TResponse? Response { get; private set; }
+}
