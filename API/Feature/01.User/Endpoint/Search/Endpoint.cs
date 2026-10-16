@@ -2,7 +2,7 @@
 
 namespace API.Feature.Endpoint;
 
-public class UserSearch(AppDbContext db) : FastEndpoint<UserSearchRequest, UserGetResponse[]>
+public class UserSearch(AppDbContext db) : FastEndpoint<UserSearchRequest, UserSearchResponse[]>
 {
     public override void Configure()
     {
@@ -13,7 +13,7 @@ public class UserSearch(AppDbContext db) : FastEndpoint<UserSearchRequest, UserG
     {
         var query = db.Set<User>().AsQueryable();
         if (request.Name != null) query = query.Where(x => x.Name.Contains(request.Name));
-        var users = await query.Select(x => new UserGetResponse(x)).ToArrayAsync(cancellation);
+        var users = await query.Select(x => new UserSearchResponse(x)).ToArrayAsync(cancellation);
         Response = users;
     }
 }

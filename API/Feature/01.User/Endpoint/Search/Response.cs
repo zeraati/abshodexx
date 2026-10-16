@@ -2,9 +2,9 @@
 
 namespace API.Feature.Endpoint;
 
-public class UserGetResponse
+public class UserSearchResponse
 {
-    public UserGetResponse(User user)
+    public UserSearchResponse(User user)
     {
         Id = user.Id;
         Name = user.Name;
