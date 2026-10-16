@@ -14,7 +14,7 @@ builder.Services
     .AddFastEndpoints()
     .AddSwaggerConfig(true)
     .AddHttpContextAccessor()
-    //.AddDbConfig<AppDbContext>(AppConfig.Connection)
+    .AddDbConfig<AppDbContext>(AppConfig.Connection)
     .AddAuthConfig(AppConfig.Issuer, AppConfig.Audience)
     .AddHttpClient<HttpClientService>();
 
