@@ -1,19 +1,19 @@
 ﻿using API.Feature.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Feature.Endpoint;
 
-public class UserGet(AppDbContext db) : FastEndpoint<UserSearchRequest, UserGetResponse[]>
+public class UserGet(AppDbContext db) : FastEndpoint<UserGetRequest, UserGetResponse>
 {
+    [AllowAnonymous]
     public override void Configure()
     {
-        Get("user/search");
+        Get("user");
     }
 
-    public override async Task HandleAsync(UserSearchRequest request, CancellationToken cancellation)
+    public override async Task HandleAsync(UserGetRequest request, CancellationToken cancellation)
     {
-        var query = db.Set<User>().AsQueryable();
-        if (request.Name != null) query = query.Where(x => x.Name.Contains(request.Name));
-        var users = await query.Select(x => new UserGetResponse(x)).ToArrayAsync(cancellation);
-        Response = users;
+        var user = await db.Set<User>().SingleAsync(x => x.Id == request.Id,cancellation);
+        Response = new UserGetResponse(user);
     }
 }
