@@ -1,7 +1,5 @@
-﻿using API.Feature.Domain;
-using Common.HttpClient;
+﻿using Common.HttpClient;
 using Microsoft.AspNetCore.Authorization;
-using System.Text.Json.Serialization;
 
 namespace API.Feature.Endpoint;
 
