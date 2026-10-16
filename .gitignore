@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 !01.User/
 !01.User/**
+/API/Common/AppConfig.cs
