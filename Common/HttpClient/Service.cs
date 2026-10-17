@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace Common.HttpClient;
 
@@ -48,7 +48,3 @@ public partial class HttpClientService(ILogger<HttpClientService> logger, System
         return clientResponse;
     }
 }
-
-
-
-
