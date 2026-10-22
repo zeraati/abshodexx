@@ -3,6 +3,7 @@
 namespace API.Feature;
 
 public record TradeCreateCommand(long UserId, Side Side) : ICommand<Trade>;
+
 public class TradeCreateCommandHandler(AppDbContext db) : ICommandHandler<TradeCreateCommand, Trade>
 {
     public async Task<Trade> ExecuteAsync(TradeCreateCommand command, CancellationToken cancellation)

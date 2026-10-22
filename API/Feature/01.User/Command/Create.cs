@@ -3,6 +3,7 @@
 namespace API.Feature;
 
 public record UserCreateCommand(string Name, string Username, string? Mobile) : ICommand<User>;
+
 public class UserCreateHandler(AppDbContext db) : ICommandHandler<UserCreateCommand, User>
 {
     public async Task<User> ExecuteAsync(UserCreateCommand command, CancellationToken cancellation)

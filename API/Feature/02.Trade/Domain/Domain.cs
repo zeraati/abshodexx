@@ -11,8 +11,8 @@ public partial class Trade
 
     public void SetLot(int lot,decimal indicativePrice)
     {
-        Lot = lot;
-        LotAt = DateTime.UtcNow;
+        Geram = lot;
+        GeramAt = DateTime.UtcNow;
         IndicativePrice = indicativePrice;
     }
 

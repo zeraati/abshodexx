@@ -10,8 +10,8 @@ public partial class Trade: BaseEntity
     public Side Side { get; }
     public DateTime? SideAt { get;}
 
-    public int? Lot { get; private set; }
-    public DateTime? LotAt { get; private set; }
+    public int? Geram { get; private set; }
+    public DateTime? GeramAt { get; private set; }
 
     public decimal? IndicativePrice { get; private set; } // قیمت اعلامی غیر قطعی
     public DateTime? IndicativePriceAt { get; private set; }
