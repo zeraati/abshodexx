@@ -4,10 +4,13 @@ namespace API.Feature;
 
 public record TradeCreateCommand(long UserId, Side Side) : ICommand<Trade>;
 
-public class TradeCreateCommandHandler(AppDbContext db) : ICommandHandler<TradeCreateCommand, Trade>
+public class TradeCreateCommandHandler(IServiceScopeFactory factory) : ICommandHandler<TradeCreateCommand, Trade>
 {
     public async Task<Trade> ExecuteAsync(TradeCreateCommand command, CancellationToken cancellation)
     {
+        await using var scope = factory.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
         var trade = new Trade(command.UserId, command.Side);
         db.Set<Trade>().Add(trade);
         await db.SaveChangesAsync(cancellation);
