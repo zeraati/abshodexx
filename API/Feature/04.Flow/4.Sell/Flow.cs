@@ -31,7 +31,7 @@ public class SellFlowHandler : IFlowHandler
     private async Task<string> HandleConfirmation(Update update, long userId, CancellationToken cancellation)
     {
         var confirmed = update.Message!.Text.ToPersianNumber() == "۱";
-        var userState = await new UserStateStepCompletedCommand(userId, Flow, confirmed).ExecuteAsync(cancellation);
+        var userState = await new UserStateFlowCompletedCommand(userId, Flow, confirmed).ExecuteAsync(cancellation);
 
         return confirmed ? $"{userState!.Geram} گرم فروخته شد." : "درخواست فروش تایید نشد.";
     }
