@@ -9,7 +9,8 @@ public class UserStateCommandCompletedCommandHandler(AppDbContext db) : ICommand
 {
     public async Task ExecuteAsync(UserStateCommandCompletedCommand command, CancellationToken cancellation)
     {
-        var userState = await new UserStateGetLastCommand(command.UserId,null).ExecuteAsync(cancellation);
+        var userState = await db.Set<UserState>().OrderByDescending(x => x.Id)
+            .FirstOrDefaultAsync(x => x.UserId == command.UserId, cancellation);
         if (userState == null || userState.Step == Step.Completed) return;
 
         userState = new UserState(command.UserId, userState.Flow, Step.Completed,null);
