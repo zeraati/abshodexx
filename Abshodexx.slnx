@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="API/API.csproj" />
+  <Project Path="Bale/Bale.csproj" Id="48e3775b-0602-4a02-ad47-e9d973f1e9a3" />
   <Project Path="Common/Common.csproj" />
 </Solution>
