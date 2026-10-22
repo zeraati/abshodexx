@@ -2,7 +2,7 @@
 
 namespace API;
 
-public class BuyFlowHandler : IFlowHandler
+public class BuyFlowHandler (AppDbContext db): IFlowHandler
 {
     public Flow Flow => Flow.Buy;
 

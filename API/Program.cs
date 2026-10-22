@@ -20,6 +20,7 @@ builder.Services
     .AddBaleConfig()
     .AddHttpClient<HttpClientService>();
 
+builder.Services.AddScoped<Service>();
 builder.Services.AddHostedService<PollingService>();
 
 var app = builder.Build();

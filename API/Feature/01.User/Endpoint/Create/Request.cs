@@ -1,3 +1,3 @@
 ﻿namespace API.Feature.Endpoint;
 
-public record UserCreateRequest(string Name);
+public record UserCreateRequest(string Name,string Username,string Mobile);

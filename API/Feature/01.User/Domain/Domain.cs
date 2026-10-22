@@ -2,14 +2,17 @@
 
 public partial class User
 {
-    public User(string name)
+    public User(string name,string username,string? mobile)
     {
         Name = name;
+        Username=username;
+        Mobile = mobile;
     }
 
-    public void Update(string name)
+    public void Update(string name, string username, string? mobile)
     {
         Name = name;
-        UpdateAt = DateTime.Now;
+        Username = username;
+        Mobile = mobile;
     }
 }

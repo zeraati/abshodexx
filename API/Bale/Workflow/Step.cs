@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Bale;
+﻿namespace Bale;
 
 public enum Step
 {

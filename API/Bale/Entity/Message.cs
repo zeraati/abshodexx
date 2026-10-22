@@ -6,7 +6,7 @@ public class Message
 {
     public long MessageId { get; set; }
 
-    public User? From { get; set; }
+    public BaleUser? From { get; set; }
 
     public long Date { get; set; }
 
