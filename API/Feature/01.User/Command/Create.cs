@@ -8,7 +8,7 @@ public class UserCreateHandler(AppDbContext db) : ICommandHandler<UserCreateComm
 {
     public async Task<User> ExecuteAsync(UserCreateCommand command, CancellationToken cancellation)
     {
-        var user = await db.Set<User>().SingleOrDefaultAsync(x => x.Username == command.Username);
+        var user = await db.Set<User>().SingleOrDefaultAsync(x => x.Username == command.Username,cancellation);
         if (user == null)
         {
             user = new User(command.Name, command.Username, command.Mobile);
