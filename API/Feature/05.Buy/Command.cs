@@ -1,5 +1,4 @@
 ﻿using Bale;
-using API.Feature.Domain;
 
 namespace API.Feature;
 
