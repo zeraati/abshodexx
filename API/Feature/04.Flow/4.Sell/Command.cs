@@ -1,12 +1,13 @@
-﻿using Bale;
+﻿using API.Feature;
+using Bale;
 namespace API;
 
 public class SellCommandHandler : Bale.ICommandHandler
 {
     public Button Button => Button.Sell;
-    public Task<string> Handle(Update update, CancellationToken cancellation)
+    public async Task<string> Handle(long userId, Update update, CancellationToken cancellation)
     {
-        state.Update(Flow.Sell, Step.WaitingForEnterGeram, null);
+        await new UserStateCreateCommand(userId, Flow.Sell, Step.WaitingForEnterGeram, null).ExecuteAsync(cancellation);
         return "چند گرم می‌خواهید بفروشید؟";
     }
 }
