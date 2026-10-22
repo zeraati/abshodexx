@@ -4,11 +4,11 @@ namespace API.Feature.Domain;
 
 public partial class UserState
 {
-    public UserState(long userId, Side side)
+    public UserState(long userId,Flow flow,Step step)
     {
         UserId = userId;
-        Flow = Flow.None;
-        Step = Step.None;
+        Flow = flow;
+        Step = step;
     }
 
     public void Update(Flow flow, Step step, int? geram)
@@ -18,9 +18,5 @@ public partial class UserState
         Geram = geram;
     }
 
-    public void Clear()
-    {
-        Flow = Flow.None;
-        Step = Step.None;
-    }
+    public void Completed()=> Step = Step.Completed;
 }

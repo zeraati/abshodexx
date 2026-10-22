@@ -2,8 +2,7 @@
 
 public enum Step
 {
-    None,
     WaitingForEnterGeram,
     WaitingForConfirmOrder,
-    Confirmed,
+    Completed,
 }
