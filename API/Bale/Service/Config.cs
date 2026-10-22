@@ -1,19 +1,13 @@
-﻿using Microsoft.Data.SqlClient;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace Bale;
 
-public enum Step
-{
-    None,
-    WaitingForEnterGeram,
-    WaitingForConfirmOrder
-}
-
 public static partial class BaleConfig
 {
-    public static IServiceCollection BaleConfig<T>(this IServiceCollection services, string token)
+    public static IServiceCollection AddBaleConfig(this IServiceCollection services)
     {
+        services.AddScoped<Service>();
+
         var commands = Assembly.GetEntryAssembly()!.GetTypes().Where(x => typeof(CommandHandler).IsAssignableFrom(x)).ToArray();
         foreach (var command in commands) services.AddScoped(typeof(CommandHandler), command);
 
