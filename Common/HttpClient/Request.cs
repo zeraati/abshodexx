@@ -5,19 +5,21 @@ namespace Common.HttpClient;
 
 public class HttpClientRequest
 {
-    public HttpClientRequest(HttpMethod method, string url) { Method = method; Url = url; }
+    public HttpClientRequest(HttpMethod method, string baseUrl,string relativeUrl) { Method = method;BaseUrl = baseUrl; RelativeUrl = relativeUrl; }
 
     public HttpMethod Method { get; private set; }
-    public string Url { get; private set; }
+    public string BaseUrl { get; private set; }
+    public string RelativeUrl { get; private set; }
     public object? Body { get; set; }
     public string? Token { get; set; }
     public string? ApiKey { get; set; }
 
     public HttpRequestMessage CreateRequest(out string? bodyJson)
     {
-        bodyJson = Body is null ? null : Util.Json.Serialize(Body);
+        if (Uri.TryCreate(new Uri(BaseUrl),RelativeUrl,out var absoluteUri)==false) throw new ArgumentException("Invalid URL");
+        var request = new HttpRequestMessage(Method, absoluteUri);
 
-        var request = new HttpRequestMessage(Method, Url);
+        bodyJson = Body is null ? null : Json.Serialize(Body,"bale");
         if (bodyJson is not null) request.Content = new StringContent(bodyJson, Encoding.UTF8, "application/json");
 
         if (Token != null) request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);

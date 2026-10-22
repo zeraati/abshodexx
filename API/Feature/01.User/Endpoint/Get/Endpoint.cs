@@ -17,7 +17,7 @@ public class UserGet(AppDbContext db, HttpClientService httpClient) : FastEndpoi
         //var user = await db.Set<User>().SingleAsync(x => x.Id == request.Id,cancellation);
         //Response = new UserGetResponse(user);
 
-        var clientRequest = new HttpClientRequest(System.Net.Http.HttpMethod.Get, "https://nerkh.jahankhahan.shop/data/live.json");
-        var response=await httpClient.Send(clientRequest,cancellation);
+        //var clientRequest = new HttpClientRequest(System.Net.Http.HttpMethod.Get, "https://nerkh.jahankhahan.shop/data/live.json");
+        //var response=await httpClient.Send(clientRequest,cancellation);
     }
 }

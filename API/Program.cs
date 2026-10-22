@@ -6,6 +6,7 @@ global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using API;
 using Common.HttpClient;
 using FastEndpoints.Swagger;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,12 @@ builder.Services
     .AddDbConfig<AppDbContext>(AppConfig.Connection)
     .AddAuthConfig(AppConfig.Issuer, AppConfig.Audience)
     .AddHttpClient<HttpClientService>();
+
+builder.Services.AddHttpClient<HttpClientService>();
+builder.Services.AddHostedService<PollingService>();
+builder.Services.AddScoped<Bale.Service>();
+
+
 
 
 var app = builder.Build();

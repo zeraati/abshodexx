@@ -16,6 +16,7 @@ Favor correctness, security, readability, maintainability, and performance over 
 ## C# and ASP.NET Core
 
 - Follow existing nullable reference type settings and use explicit, meaningful names.
+- Do not add the `Async` suffix to method names, including asynchronous methods returning `Task`, `Task<T>`, or `ValueTask`. Apply this consistently to new methods in interfaces, implementations, services, repositories, and controllers. Preserve framework-required method names and existing public contracts when renaming would break compatibility.
 - Prefer dependency injection and framework-provided features over custom infrastructure.
 - Use asynchronous APIs for I/O-bound work and propagate `CancellationToken` where appropriate.
 - Validate untrusted input at the API boundary; return consistent, appropriate HTTP status codes and error responses.

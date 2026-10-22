@@ -28,9 +28,12 @@ public class HttpClientResponse<TResponse> : HttpClientResponse
         await base.Set(response, cancellation);
         if (IsSuccess == false || string.IsNullOrWhiteSpace(ResponseContent)) return;
 
-        try { Response = Util.Json.Deserialize<TResponse>(ResponseContent); }
+        try { Response = Json.Deserialize<TResponse>(ResponseContent,"bale"); }//TODO هارد کدی! چطوری و از کجا بخونیم که 
         catch (JsonException exception) { ResponseContent = $"Deserialization failed: {exception.Message}, ResponseContent: {ResponseContent}"; }
     }
 
     public TResponse? Response { get; private set; }
+
 }
+
+
