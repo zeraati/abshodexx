@@ -97,14 +97,16 @@ namespace API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("Flow")
-                        .HasColumnType("int");
+                    b.Property<string>("Flow")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Geram")
                         .HasColumnType("int");
 
-                    b.Property<int>("Step")
-                        .HasColumnType("int");
+                    b.Property<string>("Step")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("datetime2");

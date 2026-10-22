@@ -54,8 +54,8 @@ namespace API.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
-                    Flow = table.Column<int>(type: "int", nullable: false),
-                    Step = table.Column<int>(type: "int", nullable: false),
+                    Flow = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Step = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Geram = table.Column<int>(type: "int", nullable: true),
                     UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

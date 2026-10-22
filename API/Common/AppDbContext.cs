@@ -5,6 +5,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     protected override void ConfigureConventions(ModelConfigurationBuilder builder)
     {
         builder.Properties<string>().HaveMaxLength(500);
+        builder.Properties<Enum>().HaveConversion<string>();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)

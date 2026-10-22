@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261022214939_init")]
+    [Migration("20261022222358_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -100,14 +100,16 @@ namespace API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("Flow")
-                        .HasColumnType("int");
+                    b.Property<string>("Flow")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Geram")
                         .HasColumnType("int");
 
-                    b.Property<int>("Step")
-                        .HasColumnType("int");
+                    b.Property<string>("Step")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("datetime2");

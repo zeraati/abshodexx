@@ -8,6 +8,6 @@ public class PriceCommandHandler : Bale.ICommandHandler
     public Task<string> Handle(long userId, Update update, CancellationToken cancellation)
     {
         //state.Clear();
-        return Task.FromResult("خرید از ما ۱۰۰ تومان\nفروش به ما ۹۰ تومان");
+        return Task.FromResult("خرید ۱۰۰ تومان\nفروش ۹۰ تومان");
     }
 }
