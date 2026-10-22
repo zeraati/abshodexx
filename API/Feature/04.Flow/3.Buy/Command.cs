@@ -6,7 +6,7 @@ public class BuyCommandHandler : Bale.ICommandHandler
 {
     public Button Button => Button.Buy;
 
-    public async Task<string> Handle(Update update, ConversationState state,CancellationToken cancellation)
+    public async Task<string> Handle(Update update,CancellationToken cancellation)
     {
         var from = update.Message!.From!;
         var user = await new UserCreateCommand(from.Name!, from.Username!, null).ExecuteAsync(cancellation);

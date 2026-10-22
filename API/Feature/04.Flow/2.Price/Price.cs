@@ -5,9 +5,9 @@ public class PriceCommandHandler : Bale.ICommandHandler
 {
     public Button Button => Button.Price;
 
-    public string Handle(Update update, ConversationState state)
+    public Task<string> Handle(Update update, CancellationToken cancellation)
     {
-        state.Clear();
+        //state.Clear();
         return "خرید از ما ۱۰۰ تومان\nفروش به ما ۹۰ تومان";
     }
 }
