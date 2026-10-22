@@ -10,7 +10,7 @@ public partial class User : BaseEntity
     public string? Mobile { get; private set; } = null!;
 }
 
-public class ProductCategoryConfig : IEntityTypeConfiguration<User>
+public class UserConfig : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
