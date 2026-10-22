@@ -34,7 +34,8 @@ public class Dispatcher
         var selectedButton = update.Message!.SelectedButton<Button>();
         if (selectedButton.HasValue && _commadns.TryGetValue(selectedButton.Value, out var command))
         {
-            await Execute(new UserStateCommandCompletedCommand(user.Id), cancellation);
+            await _services.GetRequiredService<ICommandHandler<UserStateCommandCompletedCommand>>()
+                .ExecuteAsync(new UserStateCommandCompletedCommand(user.Id), cancellation);
             return await command.Handle(user.Id,update, cancellation);
         }
 
