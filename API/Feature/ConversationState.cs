@@ -1,7 +1,6 @@
-﻿using Bale;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 
-namespace API;
+namespace Bale;
 
 public class ConversationState
 {
