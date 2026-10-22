@@ -2,7 +2,7 @@
 
 namespace API;
 
-public class BuyCommandHandler : ICommandHandler
+public class BuyCommandHandler : Bale.ICommandHandler
 {
     public Button Button => Button.Buy;
 

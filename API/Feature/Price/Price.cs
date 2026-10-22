@@ -1,7 +1,7 @@
 ﻿using Bale;
 namespace API;
 
-public class PriceCommandHandler : ICommandHandler
+public class PriceCommandHandler : Bale.ICommandHandler
 {
     public Button Button => Button.Price;
 

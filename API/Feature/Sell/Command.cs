@@ -1,7 +1,7 @@
 ﻿using Bale;
 namespace API;
 
-public class SellCommandHandler : ICommandHandler
+public class SellCommandHandler : Bale.ICommandHandler
 {
     public Button Button => Button.Sell;
     public string Handle(Update update,ConversationState state)

@@ -2,28 +2,40 @@
 
 namespace API;
 
-public sealed class PollingService(Service baleService, ILogger<PollingService> logger, Dispatcher dispatcher) : BackgroundService
+public sealed class PollingService(IServiceScopeFactory factory,ILogger<PollingService> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         long offset = 0;
+
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
             try
             {
+                await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
+
+                await using var scope = factory.CreateAsyncScope();
+                var baleService = scope.ServiceProvider.GetRequiredService<Service>();
+                var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
+
                 var updates = await baleService.GetUpdates(offset, stoppingToken);
+
                 foreach (var update in updates)
                 {
-                    if (update.HasMessageText == false) continue;
+                    if (update.HasMessageText==false)
+                    {
+                        offset = update.UpdateId + 1;
+                        continue;
+                    }
 
                     var reply = await dispatcher.Dispatch(update, stoppingToken);
-                    var sent = await baleService.SendMessage(update, reply, [Button.Price, Button.Sell,Button.Buy],stoppingToken);
+                    await baleService.SendMessage(update,reply,[Button.Price, Button.Buy,Button.Sell],stoppingToken);
+                    
                     offset = update.UpdateId + 1;
                 }
-
             }
-            catch (Exception exception) { logger.LogError(exception.Message); }
+            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested){break;}
+            catch (Exception exception){logger.LogError(exception, "Error while polling updates");}
         }
     }
 }

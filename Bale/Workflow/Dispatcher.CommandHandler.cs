@@ -1,8 +1,6 @@
-﻿using API;
+﻿namespace Bale;
 
-namespace Bale;
-
-public interface CommandHandler
+public interface ICommandHandler
 {
     Button Button { get; }
     string Handle(Update update,ConversationState state);

@@ -1,7 +1,7 @@
 ﻿using Bale;
 namespace API;
 
-public class StartCommandHandler : ICommandHandler
+public class StartCommandHandler : Bale.ICommandHandler
 {
     public Button Button => Button.Start;
 

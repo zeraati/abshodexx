@@ -2,10 +2,10 @@
 
 public class Dispatcher
 {
-    private readonly Dictionary<Button, CommandHandler> _commadns;
+    private readonly Dictionary<Button, ICommandHandler> _commadns;
     private readonly Dictionary<Flow, IFlowHandler> _flows;
     private static ConversationStateStore _stateStore = new ConversationStateStore();
-    public Dispatcher(IEnumerable<CommandHandler> buttons, IEnumerable<IFlowHandler> flows)
+    public Dispatcher(IEnumerable<ICommandHandler> buttons, IEnumerable<IFlowHandler> flows)
     {
         _commadns = buttons.ToDictionary(x => x.Button);
         _flows = flows.ToDictionary(x => x.Flow);

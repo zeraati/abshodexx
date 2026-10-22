@@ -1,3 +1,5 @@
+using Common;
+
 namespace Bale;
 
 public class SendMessageRequest
