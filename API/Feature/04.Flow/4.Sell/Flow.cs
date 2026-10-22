@@ -6,7 +6,7 @@ public class SellFlowHandler : IFlowHandler
 {
     public Flow Flow => Flow.Sell;
 
-    public string Handle(Update update, ConversationState state)
+    public Task<string> Handle(Update update, CancellationToken cancellation)
     {
         string message = state.Step switch
         {

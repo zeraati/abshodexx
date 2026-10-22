@@ -10,8 +10,8 @@ public class BuyCommandHandler : Bale.ICommandHandler
     {
         var from = update.Message!.From!;
         var user = await new UserCreateCommand(from.Name!, from.Username!, null).ExecuteAsync(cancellation);
+        await new UserStateCreateCommand(user.Id,Flow.Buy, Step.WaitingForEnterGeram, null).ExecuteAsync(cancellation);
 
-        state.Update(Flow.Buy, Step.WaitingForEnterGeram, null);
         return "چند گرم می‌خواهید بخرید؟";
     }
 }
