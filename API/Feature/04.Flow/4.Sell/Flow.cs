@@ -1,4 +1,6 @@
-﻿using Bale;
+﻿using API.Feature;
+using Bale;
+using Common.Extension;
 
 namespace API;
 
@@ -6,43 +8,34 @@ public class SellFlowHandler : IFlowHandler
 {
     public Flow Flow => Flow.Sell;
 
-    public Task<string> Handle(Update update, CancellationToken cancellation)
+    public async Task<string> Handle(Update update, CancellationToken cancellation)
     {
-        string message = state.Step switch
-        {
-            Step.WaitingForEnterGeram => HandleGeram(update, state),
-            Step.WaitingForConfirmOrder =>HandleConfirmation(update, state),
-            _ => "وضعیت فروش نامعتبر است."
-        };
+        var from = update.Message!.From!;
+        var user = await new UserCreateCommand(from.Name!, from.Username!, null).ExecuteAsync(cancellation);
+        var userState = await new UserStateGetLastCommand(user.Id, Flow).ExecuteAsync(cancellation);
+
+        var message = "وضعیت فروش نامعتبر است.";
+
+        if (userState?.Step == Step.WaitingForEnterGeram) message = await HandleGeram(update, user.Id, cancellation);
+        if (userState?.Step == Step.WaitingForConfirmOrder) message = await HandleConfirmation(update, user.Id, cancellation);
 
         return message;
     }
 
-    private string HandleGeram(Update update, ConversationState state)
+    private async Task<string> HandleGeram(Update update, long userId, CancellationToken cancellation)
     {
-        var geram = update.Message!.Number;
+        var geram = (int?)update.Message!.Number;
         if (geram.GetValueOrDefault() <= 0) return "مقدار نامتعبر است، لطقا مقدار معتبری وارد نمایید";
 
-        state.Update(state.Flow, Step.WaitingForConfirmOrder, geram.Value);
+        await new UserStateCreateCommand(userId, Flow, Step.WaitingForConfirmOrder, geram).ExecuteAsync(cancellation);
         return $"فروش {geram} گرم\nیک برای تایید عدد یک و برای لغو عدد دو را ارسال کنید";
     }
-    
-    private string HandleConfirmation(Update update,ConversationState state)
+
+    private async Task<string> HandleConfirmation(Update update, long userId, CancellationToken cancellation)
     {
-        if (update.Message!.Text == "1" || update.Message!.Text=="۱")
-        {
-            // TODO: Create sell order using geram
+        var confirmed = update.Message!.Text.ToPersianNumber() == "۱";
+        var userState = await new UserStateStepCompletedCommand(userId, Flow, confirmed).ExecuteAsync(cancellation);
 
-            state.Clear();
-            return $"{state.Geram} گرم فروخته شد.";
-        }
-
-        if (update.Message!.Text == "2" || update.Message!.Text == "۲")
-        {
-            state.Clear();
-            return "درخواست فروش لغو شد.";
-        }
-
-        return $"فروش {state.Geram} گرم\nیک برای تایید عدد یک و برای لغو عدد دو را ارسال کنید";
+        return confirmed ? $"{userState!.Geram} گرم فروخته شد." : "درخواست فروش تایید نشد.";
     }
 }
