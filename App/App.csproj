@@ -23,4 +23,8 @@
 		<ProjectReference Include="..\Service\Service.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Feature\02.Workflow\3.Command\" />
+	</ItemGroup>
+
 </Project>

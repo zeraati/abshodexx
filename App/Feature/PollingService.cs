@@ -15,7 +15,7 @@ public sealed class PollingService(IServiceScopeFactory factory,ILogger<PollingS
                 await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
 
                 await using var scope = factory.CreateAsyncScope();
-                var baleService = scope.ServiceProvider.GetRequiredService<Service>();
+                var baleService = scope.ServiceProvider.GetRequiredService<BaleService>();
                 var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
 
                 var updates = await baleService.GetUpdates(offset, stoppingToken);
