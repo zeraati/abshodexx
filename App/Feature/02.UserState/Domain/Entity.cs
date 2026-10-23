@@ -5,7 +5,7 @@ namespace App.Feature.Domain;
 public partial class UserState : BaseEntity
 {
     private UserState(){ }
-    public long UserId { get; set; }
+    public string Username { get; set; } = null!;
 
     public Flow Flow { get; private set; }
     public Step Step { get; private set; }

@@ -2,9 +2,9 @@
 
 public partial class UserState
 {
-    public UserState(long userId, Flow flow, Step step, int? geram,decimal? price)
+    public UserState(string username, Flow flow, Step step, int? geram,decimal? price)
     {
-        UserId = userId;
+        Username = username;
         Flow = flow;
         Step = step;
         Geram = geram;
