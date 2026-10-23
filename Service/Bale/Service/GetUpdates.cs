@@ -1,7 +1,9 @@
-﻿using Common.HttpClient;
+﻿using Common;
+using Common.HttpClient;
 
 namespace Bale;
-public partial class Service
+
+public partial class BaleService:IScoped
 {
     public async Task<Update[]> GetUpdates(long offset, CancellationToken cancellation)
     {
@@ -9,4 +11,10 @@ public partial class Service
         var response = await client.Send<GetUpdatesResponse>(request, cancellation);
         return response?.Response?.Ok == true ? response.Response!.Result ?? [] : [];
     }
+}
+
+public class GetUpdatesResponse
+{
+    public bool Ok { get; set; } = false;
+    public Update[]? Result { get; set; }
 }

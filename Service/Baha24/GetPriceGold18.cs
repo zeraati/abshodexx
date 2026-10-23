@@ -2,7 +2,7 @@
 
 namespace Baha24;
 
-public partial class Service
+public partial class Baha24Service
 {
     public async Task<GetPriceGold18Response?> GetPriceGold18(CancellationToken cancellation)
     {
@@ -14,4 +14,13 @@ public partial class Service
         var response = await client.Send<GetPriceGold18Response>(request, cancellation);
         return response?.IsSuccess == true ? response.Response : null;
     }
+}
+
+public class GetPriceGold18Response
+{
+    public string Title { get; set; } = null!;
+    public string Symbol { get; set; } = null!;
+    public decimal Sell { get; set; }
+    public decimal Buy => Sell + 30_000;
+    public DateTime LastUpdate { get; set; }
 }

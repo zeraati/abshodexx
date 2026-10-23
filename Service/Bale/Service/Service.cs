@@ -1,7 +1,9 @@
-﻿using Common.HttpClient;
+﻿using Common;
+using Common.HttpClient;
 
 namespace Bale;
-public partial class Service(HttpClientService client):IScoped{}
+
+public partial class BaleService(HttpClientService client):IScoped{}
 
 public static class Url
 {
