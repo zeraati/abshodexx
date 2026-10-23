@@ -1,9 +1,7 @@
-﻿using App.Feature.Domain;
-
-namespace Bale;
+﻿namespace Bale;
 
 public interface IFlowHandler
 {
     Flow Flow { get; }
-    Task<string> Handle(UserState userState, Update update, CancellationToken cancellation);
+    Task<string> Handle(Update update, CancellationToken cancellation);
 }

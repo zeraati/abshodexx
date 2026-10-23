@@ -13,9 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddMemoryCache()
     .AddFastEndpoints()
-    .RegisterServices()
     .AddSwaggerConfig(true)
     .AddHttpContextAccessor()
+    .RegisterServices()
     .AddDbConfig<AppDbContext>(AppConfig.Connection)
     .AddAuthConfig(AppConfig.Issuer, AppConfig.Audience)
     .AddBaleConfig()

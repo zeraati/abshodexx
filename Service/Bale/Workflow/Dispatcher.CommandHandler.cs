@@ -3,5 +3,5 @@
 public interface ICommandHandler
 {
     Button Button { get; }
-    Task<string> Handle(long userId,Update update,CancellationToken cancellation);
+    Task<string> Handle(Update update,CancellationToken cancellation);
 }
