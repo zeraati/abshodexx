@@ -8,6 +8,7 @@ public class Update
 
     public Message? Message { get; set; }
 
+    public string? Username => Message?.From?.Username;
     public bool HasMessageText => Message?.Text.Empty() == false;
 }
 

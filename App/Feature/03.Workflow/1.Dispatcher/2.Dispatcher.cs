@@ -13,19 +13,18 @@ public class WorkflowDispatcher : IScoped
         _flows = flows.ToDictionary(x => x.Flow);
     }
 
-    public async Task<string> Dispatch(Update update, CancellationToken cancellation)
+    public async Task<string> Dispatch(Update update, Flow? flow, CancellationToken cancellation)
     {
         // first: command
         var selectedButton = update.Message!.SelectedButton<Button>();
-        if (selectedButton.HasValue && _commadns.TryGetValue(selectedButton.Value, out var command))
-        {
-            return await command.Handle(update, cancellation);
-        }
+        if (selectedButton.HasValue && _commadns.TryGetValue(selectedButton.Value, out var commandHandler))
+            return await commandHandler.Handle(update, cancellation);
 
 
         // second: flow
-        //var userState = await new UserStateGetLastCommand(user.Id,null).ExecuteAsync(cancellation);
-        //if (userState !=null && _flows.TryGetValue(userState.Flow, out var flow)) return await flow.Handle(userState,update, cancellation);
+        if (flow != null && _flows.TryGetValue(flow.Value, out var flowHandler))
+            return await flowHandler.Handle(update, cancellation);
+
 
         return "برای استفاده از بات دکمه های زیر را انتخاب کنید.";
     }

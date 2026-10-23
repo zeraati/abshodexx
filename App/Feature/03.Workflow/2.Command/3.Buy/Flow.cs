@@ -9,7 +9,7 @@ public class BuyFlowHandler : IWorkflowFlowHandler
 {
     public Flow Flow => Flow.Buy;
 
-    public async Task<string> Handle(UserState userState, Update update, CancellationToken cancellation)
+    public async Task<string> Handle(Update update, CancellationToken cancellation)
     {
         var message = "وضعیت خرید نامعتبر است.";
 
@@ -24,7 +24,7 @@ public class BuyFlowHandler : IWorkflowFlowHandler
         var geram = (int?)update.Message!.Number;
         if (geram.GetValueOrDefault() <= 0) return "مقدار نامتعبر است، لطقا مقدار معتبری وارد نمایید";
 
-        await new UserStateCreateCommand(userId, Flow, Step.WaitingForConfirmOrder, geram,1000).ExecuteAsync(cancellation);
+        //await new UserStateCreateCommand(userId, Flow, Step.WaitingForConfirmOrder, geram,1000).ExecuteAsync(cancellation);
         return $"خرید {geram} گرم به قیمت ۱۰۰۰ تومان\nیک برای تایید عدد یک و برای لغو عدد دو را ارسال کنید";
     }
 
