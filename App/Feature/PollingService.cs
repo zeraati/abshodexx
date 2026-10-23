@@ -1,4 +1,5 @@
 ﻿using Bale;
+using App.Feature;
 
 namespace App;
 
@@ -15,7 +16,7 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
 
                 await using var scope = factory.CreateAsyncScope();
                 var baleService = scope.ServiceProvider.GetRequiredService<BaleService>();
-                var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
+                var dispatcher = scope.ServiceProvider.GetRequiredService<WorkflowDispatcher>();
 
                 var updates = await baleService.GetUpdates(offset, stoppingToken);
                 foreach (var update in updates)
