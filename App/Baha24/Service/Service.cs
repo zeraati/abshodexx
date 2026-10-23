@@ -1,7 +1,7 @@
 ﻿using Common.HttpClient;
 
 namespace Baha24;
-public partial class Service(HttpClientService client){}
+public partial class Service(HttpClientService client):IScoped{ }
 
 public static class Url
 {

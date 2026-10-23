@@ -2,7 +2,7 @@
 
 namespace Bale;
 
-public class Dispatcher
+public class Dispatcher: IScoped
 {
     private readonly Dictionary<Button, ICommandHandler> _commadns;
     private readonly Dictionary<Flow, IFlowHandler> _flows;

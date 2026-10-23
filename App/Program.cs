@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddMemoryCache()
     .AddFastEndpoints()
+    .RegisterServices()
     .AddSwaggerConfig(true)
     .AddHttpContextAccessor()
     .AddDbConfig<AppDbContext>(AppConfig.Connection)
@@ -21,8 +22,6 @@ builder.Services
     .AddBaleConfig()
     .AddHttpClient<HttpClientService>();
 
-builder.Services.AddScoped<Bale.Service>();
-builder.Services.AddScoped<Baha24.Service>();
 builder.Services.AddHostedService<PollingService>();
 builder.Services.AddHostedService<GoldPriceFetchService>();
 
