@@ -6,13 +6,20 @@ namespace Common;
 
 public static partial class ServiceConfig
 {
-    public static IServiceCollection RegisterServices(this IServiceCollection services)
+    public static IServiceCollection RegisterServices(this IServiceCollection services,params Assembly[] assemblies)
     {
-        var scopedServices = Assembly.GetExecutingAssembly().GetTypes().Where(x => x.IsInterface == false && typeof(IScoped).IsAssignableFrom(x)).ToArray();
-        foreach (var service in scopedServices) services.AddScoped(service);
+        foreach (var assembly in assemblies.Append(Assembly.GetCallingAssembly()).Distinct())
+        {
+            var types = assembly.GetTypes().Where(x => x.IsClass && !x.IsAbstract).ToList();
 
-        var hostedServices = Assembly.GetExecutingAssembly().GetTypes().Where(x => x.IsInterface == false && typeof(IHosted).IsAssignableFrom(x)).ToArray();
-        foreach (var service in hostedServices) services.AddSingleton(typeof(IHostedService), service);
+            // Scoped Services
+            var scopedServices = types.Where(x => typeof(IScoped).IsAssignableFrom(x));
+            foreach (var service in scopedServices) services.AddScoped(service);
+
+            // Hosted Services
+            var hostedServices = types.Where(x => typeof(IHosted).IsAssignableFrom(x));
+            foreach (var service in hostedServices) services.AddSingleton(typeof(IHostedService), service);
+        }
 
         return services;
     }

@@ -6,6 +6,15 @@ namespace Bale;
 
 public partial class BaleService : IScoped
 {
+    public async Task<bool> SendMessage(Update update, string text, CancellationToken cancellation)
+    {
+        var body = new SendMessageRequest(update, text.ToPersianNumber()!);
+        var request = new HttpClientRequest(HttpMethod.Post, Url.Base, Url.SendMessage) { Body = body };
+        var response = await client.Send<SendMessageResponse>(request, cancellation);
+
+        return response?.Response?.Ok == true;
+    }
+
     public async Task<bool> SendMessage<TButton>(Update update, string text, TButton[] buttons, CancellationToken cancellation) where TButton : struct, Enum
     {
         var body = new SendMessageRequest(update, text.ToPersianNumber()!);

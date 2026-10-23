@@ -1,11 +1,10 @@
-﻿using App.Feature;
-using App.Feature.Domain;
-using Bale;
+﻿using Bale;
+using App.Feature;
 using Common.Extension;
 
 namespace App;
 
-public class BuyFlowHandler : IWorkflowFlowHandler
+public class BuyFlowHandler(UserStateService userStateService) : IWorkflowFlowHandler
 {
     public Flow Flow => Flow.Buy;
 
@@ -13,26 +12,31 @@ public class BuyFlowHandler : IWorkflowFlowHandler
     {
         var message = "وضعیت خرید نامعتبر است.";
 
-        if (userState?.Step == Step.WaitingForEnterGeram) message = await HandleGeram(update, userState.UserId, cancellation);
-        if (userState?.Step == Step.WaitingForConfirmOrder) message = await HandleConfirmation(update, userState.UserId, cancellation);
+        var state = await userStateService.Get(update.Username!, cancellation);
+        if (state?.Step == Step.WaitingForEnterGeram) message = await HandleGeram(update, cancellation);
+        if (state?.Step == Step.WaitingForConfirmOrder) message = await HandleConfirmation(update, cancellation);
 
         return message;
     }
 
-    private async Task<string> HandleGeram(Update update, long userId, CancellationToken cancellation)
+    private async Task<string> HandleGeram(Update update, CancellationToken cancellation)
     {
         var geram = (int?)update.Message!.Number;
         if (geram.GetValueOrDefault() <= 0) return "مقدار نامتعبر است، لطقا مقدار معتبری وارد نمایید";
 
-        //await new UserStateCreateCommand(userId, Flow, Step.WaitingForConfirmOrder, geram,1000).ExecuteAsync(cancellation);
+        var newState=new UserStateCreate(update.Username!, Flow, Step.WaitingForConfirmOrder, geram, 1000);
+        await userStateService.Create(newState, cancellation);
         return $"خرید {geram} گرم به قیمت ۱۰۰۰ تومان\nیک برای تایید عدد یک و برای لغو عدد دو را ارسال کنید";
     }
 
-    private async Task<string> HandleConfirmation(Update update, long userId, CancellationToken cancellation)
+    private async Task<string> HandleConfirmation(Update update, CancellationToken cancellation)
     {
         var confirmed = update.Message!.Text.ToPersianNumber() == "۱";
-        var userState=await new UserStateFlowCompletedCommand(userId, Flow, confirmed).ExecuteAsync(cancellation);
 
-        return confirmed? $"{userState!.Geram} گرم خریداری شد.":"درخواست خرید تایید نشد.";
+        var state = await userStateService.Get(update.Username!, cancellation);
+        var newState = new UserStateCreate(update.Username!, Flow, Step.Completed, state!.Geram, 1000);
+        await userStateService.Create(newState, cancellation);
+
+        return confirmed? $"{state!.Geram} گرم خریداری شد.":"درخواست خرید تایید نشد.";
     }
 }
