@@ -1,6 +1,4 @@
-﻿using Common;
-
-namespace Bale;
+﻿namespace App.Feature;
 
 public class Dispatcher: IScoped
 {

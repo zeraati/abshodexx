@@ -2,12 +2,11 @@
 
 namespace App;
 
-public sealed class PollingService(IServiceScopeFactory factory,ILogger<PollingService> logger) : BackgroundService,IHosted
+public sealed class PollingService(IServiceScopeFactory factory, ILogger<PollingService> logger) : BackgroundService, IHosted
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         long offset = 0;
-
         while (!stoppingToken.IsCancellationRequested)
         {
             try
@@ -19,23 +18,18 @@ public sealed class PollingService(IServiceScopeFactory factory,ILogger<PollingS
                 var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
 
                 var updates = await baleService.GetUpdates(offset, stoppingToken);
-
                 foreach (var update in updates)
                 {
-                    if (update.HasMessageText==false)
-                    {
-                        offset = update.UpdateId + 1;
-                        continue;
-                    }
+                    offset = update.UpdateId + 1;
+
+                    if (update.HasMessageText == false) continue;
 
                     var reply = await dispatcher.Dispatch(update, stoppingToken);
-                    await baleService.SendMessage(update,reply,[Button.Price, Button.Buy,Button.Sell],stoppingToken);
-                    
-                    offset = update.UpdateId + 1;
+                    await baleService.SendMessage(update, reply, [Button.Price, Button.Buy, Button.Sell], stoppingToken);
                 }
             }
-            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested){break;}
-            catch (Exception exception){logger.LogError(exception, "Error while polling updates");}
+            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) { break; }
+            catch (Exception exception) { logger.LogError(exception, "Error while polling updates"); }
         }
     }
 }

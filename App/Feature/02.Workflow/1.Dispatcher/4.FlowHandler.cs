@@ -1,4 +1,4 @@
-﻿namespace Bale;
+﻿namespace App.Feature;
 
 public interface IFlowHandler
 {
