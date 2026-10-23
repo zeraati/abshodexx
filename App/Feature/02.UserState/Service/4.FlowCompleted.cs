@@ -5,14 +5,11 @@ namespace App.Feature;
 
 public record UserStateFlowCompletedCommand(long UserId, Flow Flow, bool Confirmed) : ICommand<UserState?>;
 
-public class UserStateFlowCompletedCommandHandler(IServiceScopeFactory factory) : ICommandHandler<UserStateFlowCompletedCommand, UserState?>
+public class UserStateFlowCompletedCommandHandler(AppDbContext db) : IScoped
 {
     public async Task<UserState?> ExecuteAsync(UserStateFlowCompletedCommand command, CancellationToken cancellation)
     {
-        await using var scope = factory.CreateAsyncScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        var userState = await new UserStateGetLastCommand(command.UserId, command.Flow).ExecuteAsync(cancellation);
+        var userState = await new UserStateGetLast(command.UserId, command.Flow).ExecuteAsync(cancellation);
         if (userState == null || userState.Geram == null || userState.Step == Step.Completed) return null;
 
         userState = new UserState(command.UserId, command.Flow, Step.Completed, command.Confirmed ? userState.Geram:null, command.Confirmed ? userState.Price : null);
