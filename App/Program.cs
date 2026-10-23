@@ -4,7 +4,6 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using App;
-using App.Feature;
 using Bale;
 using Common.HttpClient;
 using FastEndpoints.Swagger;
@@ -21,9 +20,6 @@ builder.Services
     .AddAuthConfig(AppConfig.Issuer, AppConfig.Audience)
     .AddBaleConfig()
     .AddHttpClient<HttpClientService>();
-
-builder.Services.AddHostedService<PollingService>();
-builder.Services.AddHostedService<GoldPriceFetchService>();
 
 var app = builder.Build();
 app.UseAuthentication().UseAuthorization()

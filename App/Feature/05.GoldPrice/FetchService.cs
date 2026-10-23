@@ -2,7 +2,7 @@ using Baha24;
 
 namespace App.Feature;
 
-public sealed class GoldPriceFetchService(IServiceScopeFactory factory, ILogger<GoldPriceFetchService> logger) : BackgroundService
+public sealed class GoldPriceFetchService(IServiceScopeFactory factory, ILogger<GoldPriceFetchService> logger) : BackgroundService, IHosted
 {
     private static readonly TimeSpan Interval = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan RetryDelay = TimeSpan.FromSeconds(30);

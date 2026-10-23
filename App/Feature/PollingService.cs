@@ -2,7 +2,7 @@
 
 namespace App;
 
-public sealed class PollingService(IServiceScopeFactory factory,ILogger<PollingService> logger) : BackgroundService
+public sealed class PollingService(IServiceScopeFactory factory,ILogger<PollingService> logger) : BackgroundService,IHosted
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
