@@ -15,7 +15,7 @@ public class UserStateCommandCompletedCommandHandler(IServiceScopeFactory factor
         var userState = await new UserStateGetLastCommand(command.UserId,null).ExecuteAsync(cancellation);
         if (userState == null || userState.Step == Step.Completed) return;
 
-        userState = new UserState(command.UserId, userState.Flow, Step.Completed,null);
+        userState = new UserState(command.UserId, userState.Flow, Step.Completed,null,null);
         db.Set<UserState>().Add(userState);
         await db.SaveChangesAsync(cancellation);
     }

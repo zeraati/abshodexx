@@ -18,12 +18,9 @@ namespace API.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
-                    Geram = table.Column<int>(type: "int", nullable: true),
-                    GeramAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IndicativePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    IndicativePriceAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    PriceAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Side = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Geram = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -57,6 +54,7 @@ namespace API.Migrations
                     Flow = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Step = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Geram = table.Column<int>(type: "int", nullable: true),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

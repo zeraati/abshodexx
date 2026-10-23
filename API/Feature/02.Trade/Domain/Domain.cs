@@ -2,29 +2,11 @@
 
 public partial class Trade
 {
-    public Trade(long userId, Side side)
+    public Trade(long userId, Side side, int geram, decimal price)
     {
         UserId = userId;
         Side = side;
-        SideAt = DateTime.UtcNow;
-    }
-
-    public void SetLot(int lot,decimal indicativePrice)
-    {
-        Geram = lot;
-        GeramAt = DateTime.UtcNow;
-        IndicativePrice = indicativePrice;
-    }
-
-    public void SetIndicativePrice(decimal indicativePrice)
-    {
-        IndicativePrice = indicativePrice;
-        IndicativePriceAt = DateTime.UtcNow;
-    }
-
-    public void SetPrice(decimal price)
-    {
+        Geram = geram;
         Price = price;
-        PriceAt = DateTime.UtcNow;
     }
 }

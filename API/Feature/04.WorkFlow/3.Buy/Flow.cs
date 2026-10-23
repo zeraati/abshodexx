@@ -24,8 +24,8 @@ public class BuyFlowHandler : IFlowHandler
         var geram = (int?)update.Message!.Number;
         if (geram.GetValueOrDefault() <= 0) return "مقدار نامتعبر است، لطقا مقدار معتبری وارد نمایید";
 
-        await new UserStateCreateCommand(userId, Flow, Step.WaitingForConfirmOrder, geram).ExecuteAsync(cancellation);
-        return $"خرید {geram} گرم\nیک برای تایید عدد یک و برای لغو عدد دو را ارسال کنید";
+        await new UserStateCreateCommand(userId, Flow, Step.WaitingForConfirmOrder, geram,1000).ExecuteAsync(cancellation);
+        return $"خرید {geram} گرم به قیمت ۱۰۰۰ تومان\nیک برای تایید عدد یک و برای لغو عدد دو را ارسال کنید";
     }
 
     private async Task<string> HandleConfirmation(Update update, long userId, CancellationToken cancellation)

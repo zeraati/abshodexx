@@ -8,7 +8,7 @@ public class BuyCommandHandler : Bale.ICommandHandler
 
     public async Task<string> Handle(long userId,Update update,CancellationToken cancellation)
     {
-        await new UserStateCreateCommand(userId,Flow.Buy, Step.WaitingForEnterGeram, null).ExecuteAsync(cancellation);
+        await new UserStateCreateCommand(userId,Flow.Buy, Step.WaitingForEnterGeram, null,null).ExecuteAsync(cancellation);
         return "چند گرم می‌خواهید بخرید؟";
     }
 }

@@ -1,13 +1,16 @@
 ﻿using Bale;
 namespace API;
+using API.Feature;
+using Common.Util;
 
-public class PriceCommandHandler : Bale.ICommandHandler
+public class PriceCommandHandler (Baha24.Service service) : Bale.ICommandHandler
 {
     public Button Button => Button.Price;
 
-    public Task<string> Handle(long userId, Update update, CancellationToken cancellation)
+    public async Task<string> Handle(long userId, Update update, CancellationToken cancellation)
     {
-        //state.Clear();
-        return Task.FromResult("خرید ۱۰۰ تومان\nفروش ۹۰ تومان");
+        await new UserStateCommandCompletedCommand(userId).ExecuteAsync(cancellation);
+        var price=await service.GetPriceGold18(cancellation);
+        return $"خرید {Number.ToToman(price!.Buy)}\nفروش {Number.ToToman(price!.Sell)}";
     }
 }

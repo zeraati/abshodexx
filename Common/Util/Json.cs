@@ -27,7 +27,7 @@ public static class Json
 
     public static T? Deserialize<T>(string? json, string? provider = null)
     {
-        try { return json is null ? default : JsonSerializer.Deserialize<T>(json, provider?.ToLower() == "bale" ? BaleOptions : JsonOptions); }
+        try { return json is null ? default : JsonSerializer.Deserialize<T>(json, provider == "bale" ? BaleOptions : JsonOptions); }
 
         catch (Exception exception) { Console.WriteLine(exception.Message); }
         return default;

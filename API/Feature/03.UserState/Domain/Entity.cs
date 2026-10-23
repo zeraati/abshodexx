@@ -1,6 +1,5 @@
 ﻿using Bale;
 using Common.Entity;
-using System.Collections.Concurrent;
 
 namespace API.Feature.Domain;
 
@@ -12,6 +11,7 @@ public partial class UserState : BaseEntity
     public Flow Flow { get; private set; }
     public Step Step { get; private set; }
     public int? Geram { get; private set; }
+    public decimal? Price { get; private set; }
 }
 
 

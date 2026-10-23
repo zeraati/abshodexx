@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261022222358_init")]
+    [Migration("20261023095013_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -33,23 +33,15 @@ namespace API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int?>("Geram")
+                    b.Property<int>("Geram")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("GeramAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal?>("IndicativePrice")
+                    b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime?>("IndicativePriceAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("PriceAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Side")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("datetime2");
@@ -106,6 +98,9 @@ namespace API.Migrations
 
                     b.Property<int?>("Geram")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Step")
                         .IsRequired()

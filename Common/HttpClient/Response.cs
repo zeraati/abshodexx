@@ -28,7 +28,8 @@ public class HttpClientResponse<TResponse> : HttpClientResponse
         await base.Set(response, cancellation);
         if (IsSuccess == false || string.IsNullOrWhiteSpace(ResponseContent)) return;
 
-        try { Response = Json.Deserialize<TResponse>(ResponseContent,"bale"); }//TODO هارد کدی! چطوری و از کجا بخونیم که 
+        string? provider = typeof(TResponse).FullName?.Contains("Bale.") == true ? "bale": null;
+        try { Response = Json.Deserialize<TResponse>(ResponseContent,provider); }
         catch (JsonException exception) { ResponseContent = $"Deserialization failed: {exception.Message}, ResponseContent: {ResponseContent}"; }
     }
 
