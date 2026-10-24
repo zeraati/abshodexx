@@ -2,12 +2,10 @@ namespace Bale;
 
 public class Chat
 {
-    public long Id { get; set; }
-
-    public string? Type { get; set; }
-
-    public string? Username { get; set; }
-
-    public string? FirstName { get; set; }
+    public long Id { get; init; }
+    public string Type { get; init; } = null!;
+    public string? Title { get; init; }
+    public string? Username { get; init; }
+    public string? FirstName { get; init; }
+    public string? LastName { get; init; }
 }
-

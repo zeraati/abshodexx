@@ -7,7 +7,7 @@ public partial class User : BaseEntity
     private User() { }
     public string Username { get; private set; } = null!;
     public string Name { get; private set; } = null!;
-    public string? Mobile { get; private set; }
+    public string? Mobile { get; set; }
 }
 
 public class UserConfig : IEntityTypeConfiguration<User>

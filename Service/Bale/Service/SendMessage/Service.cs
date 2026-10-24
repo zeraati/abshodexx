@@ -19,65 +19,11 @@ public partial class BaleService : IScoped
         return await SendRequest(body, cancellation);
     }
 
-    public async Task SendMessage(Update update, string text)
+    public async Task<bool> RequestContact(Update update, string text, CancellationToken cancellation)
     {
         var body = new SendMessageRequest(update, text.ToPersianNumber()!);
-
-        var keyboard = new
-        {
-            keyboard = new[]
-             {
-        new[]
-        {
-            new { text = "📦 محصولات" },
-            new { text = "🛒 سفارشات" }
-        },
-        new[]
-        {
-            new { text = "👤 پروفایل" },
-            new { text = "☎️ پشتیبانی" }
-        }
-    }
-        };
-
-        var keyboard2 = new
-        {
-            inline_keyboard = new[]
-    {
-        new[]
-        {
-            new
-            {
-                text = "✅ تأیید",
-                callback_data = "order_confirm"
-            },
-            new
-            {
-                text = "❌ لغو",
-                callback_data = "order_cancel"
-            }
-        }
-    }
-        };
-
-
-        var keyboard3 = new
-        {
-            keyboard = new[]
-    {
-        new[]
-        {
-            new
-            {
-                text = "📱 ارسال شماره تلفن",
-                request_contact = true
-            }
-        }
-    }
-        };
-
-        body.ReplyMarkup = keyboard3;
-        await SendRequest(body, CancellationToken.None);
+        body.AddRequestContact();
+        return await SendRequest(body, cancellation);
     }
 
     private async Task<bool> SendRequest(SendMessageRequest body, CancellationToken cancellation)

@@ -1,9 +1,9 @@
 namespace Bale;
 
-public class Contact
+public sealed class Contact
 {
-    public string PhoneNumber { get; set; } = string.Empty;
-    public string FirstName { get; set; } = string.Empty;
-    public string? LastName { get; set; }
-    public int? UserId { get; set; }
+    public string PhoneNumber { get; init; } = null!;
+    public string FirstName { get; init; } = null!;
+    public string? LastName { get; init; }
+    public int? UserId { get; init; }
 }

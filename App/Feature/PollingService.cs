@@ -1,5 +1,6 @@
 ﻿using Bale;
 using App.Feature;
+using Common.Extension;
 
 namespace App;
 
@@ -26,24 +27,28 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
                 foreach (var update in updates)
                 {
                     offset = update.UpdateId + 1;
+
                     if (update.Username == null)
                         await baleService.SendMessage(update, "لطفاً در پیام‌رسان «بله» برای حساب خود نام کاربری ثبت کنید", stoppingToken);
 
-                    var user = userService.Get(update.Username!,stoppingToken);
+
+                    var user = userService.Get(update.Username!, stoppingToken);
                     if (user == null)
                     {
+                        var mobile = update.Message!.Contact?.PhoneNumber;
 
+                        if (mobile.Empty() == true)
+                            await baleService.RequestContact(update, "برای تکمیل ثبت نام شماره موبایل خود را ارسال کنید", stoppingToken);
+
+                        await userService.UpdateMobile(update.Username!,mobile!, stoppingToken);
                     }
 
 
                     if (update.HasMessageText == false) continue;
 
-                    await baleService.SendMessage(update, "تست");
-
-
-                    //var flow = (await userStateService.Get(update.Username!, stoppingToken))?.Flow;
-                    //var reply = await dispatcher.Dispatch(update, flow, stoppingToken);
-                    //await baleService.SendMessage(update, reply, [Button.Price, Button.Sell, Button.Buy], stoppingToken);
+                    var flow = (await userStateService.Get(update.Username!, stoppingToken))?.Flow;
+                    var reply = await dispatcher.Dispatch(update, flow, stoppingToken);
+                    await baleService.SendMessage(update, reply, [Button.Price, Button.Sell, Button.Buy], stoppingToken);
                 }
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) { break; }

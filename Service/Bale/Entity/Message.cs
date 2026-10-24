@@ -4,15 +4,11 @@ namespace Bale;
 
 public class Message
 {
-    public long MessageId { get; set; }
-
-    public BaleUser? From { get; set; }
-
-    public long Date { get; set; }
-
-    public Chat Chat { get; set; } = null!;
-
-    public Contact? Contact { get; set; }
+    public long MessageId { get; init; }
+    public BaleUser? From { get; init; }
+    public long Date { get; init; }
+    public Chat Chat { get; init; } = null!;
+    public Contact? Contact { get; init; }
 
     private string? _text;
     public string? Text
