@@ -21,10 +21,13 @@ public class Message
 
     public TButton? SelectedButton<TButton>() where TButton :struct, Enum
     {
-        var resourceKey = MessageResource.ResourceManager.ResourceKey(Text?.Trim());
+        var label = Text?.Trim()?.Replace("➕ ", "").Replace("➖ ", "").Replace("💰 ", "");
+        var resourceKey = MessageResource.ResourceManager.ResourceKey(label);
         if (resourceKey.Empty()) return null;
 
-        if (Enum.TryParse<TButton>(resourceKey!.Replace("start", "/start"), true, out var button)) return button;
+        resourceKey = resourceKey!.Replace("start", "/start");
+
+        if (Enum.TryParse<TButton>(resourceKey, true, out var button)) return button;
 
         return null;
     }

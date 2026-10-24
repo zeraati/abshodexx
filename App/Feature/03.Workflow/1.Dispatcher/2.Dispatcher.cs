@@ -15,6 +15,9 @@ public class WorkflowDispatcher : IScoped
 
     public async Task<string> Dispatch(Update update, Flow? flow, CancellationToken cancellation)
     {
+        if (update.HasMessageText == false)
+            return "برای استفاده از بات دکمه های زیر را انتخاب کنید.";
+
         // first: command
         var selectedButton = update.Message!.SelectedButton<Button>();
         if (selectedButton.HasValue && _commadns.TryGetValue(selectedButton.Value, out var commandHandler))
@@ -25,7 +28,7 @@ public class WorkflowDispatcher : IScoped
         if (flow != null && _flows.TryGetValue(flow.Value, out var flowHandler))
             return await flowHandler.Handle(update, cancellation);
 
-
+        
         return "برای استفاده از بات دکمه های زیر را انتخاب کنید.";
     }
 }

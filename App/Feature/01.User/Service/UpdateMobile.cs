@@ -8,6 +8,7 @@ public partial class UserService
     {
         var user = await db.Set<User>().SingleAsync(x => x.Username == username,cancellation);
         user.Mobile=mobile;
+        await db.SaveChangesAsync(cancellation);
         return user;
     }
 }

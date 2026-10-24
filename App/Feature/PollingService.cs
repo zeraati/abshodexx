@@ -13,7 +13,7 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
         {
             try
             {
-                await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
 
                 await using var scope = factory.CreateAsyncScope();
                 var baleService = scope.ServiceProvider.GetRequiredService<BaleService>();
@@ -27,29 +27,32 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
                 foreach (var update in updates)
                 {
                     offset = update.UpdateId + 1;
+                    await baleService.RemoveKeyboard(update, stoppingToken);
 
                     if (update.Username == null)
+                    {
                         await baleService.SendMessage(update, "لطفاً در پیام‌رسان «بله» برای حساب خود نام کاربری ثبت کنید", stoppingToken);
+                        continue;
+                    }
 
-
-                    var user =await userService.Get(update, stoppingToken);
-                    if (user==null)
+                    var user = await userService.Get(update, stoppingToken);
+                    if (user == null)
                     {
                         await userService.Create(update, stoppingToken);
+                        continue;
                     }
 
                     if (user!.Mobile.Empty())
                     {
                         var mobile = update.Message!.Contact?.PhoneNumber;
-
                         if (mobile.Empty() == true)
+                        {
                             await baleService.RequestContact(update, "برای تکمیل ثبت نام شماره موبایل خود را ارسال کنید", stoppingToken);
+                            continue;
+                        }
 
-                        await userService.UpdateMobile(update.Username!,mobile!, stoppingToken);
+                        await userService.UpdateMobile(update.Username!, mobile!, stoppingToken);
                     }
-
-
-                    if (update.HasMessageText == false) continue;
 
                     var flow = (await userStateService.Get(update.Username!, stoppingToken))?.Flow;
                     var reply = await dispatcher.Dispatch(update, flow, stoppingToken);

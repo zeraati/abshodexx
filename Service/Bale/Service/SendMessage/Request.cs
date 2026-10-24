@@ -4,7 +4,7 @@ namespace Bale;
 
 public class SendMessageRequest
 {
-    public SendMessageRequest(Update update, string text)
+    public SendMessageRequest(Update update, string? text)
     {
         ChatId = update.Message!.Chat.Id;
         Text = text;
@@ -27,11 +27,8 @@ public class SendMessageRequest
 
     public void AddInlineKeyboard(InlineKeyboard[] inlineKeyboards) => new ReplyMarkup([inlineKeyboards]);
 
-    public void AddRequestContact() => ReplyMarkup = ReplyMarkup.RequestContact;
-
-
     public long ChatId { get; }
-    public string Text { get; }
+    public string? Text { get; }
     public ReplyMarkup? ReplyMarkup { get; set; }
 }
 
@@ -40,7 +37,8 @@ public class SendMessageRequest
 public class ReplyMarkup
 {
     public ReplyMarkup(string[][] keyboard) => Keyboard = keyboard;
-    public static ReplyMarkup RequestContact => new ReplyMarkup { Keyboard = [[new { Text = "📱 ارسال شماره", RequestContact = true }]] };
+    public static ReplyMarkup RemoveKey => new ReplyMarkup { RemoveKeyboard= true};
+    public static ReplyMarkup RequestContact => new ReplyMarkup { Keyboard = [[new { Text = "📱 ارسال شماره موبایل", RequestContact = true }]] };
     public ReplyMarkup(InlineKeyboard[][] inlineKeyboard) => InlineKeyboard = inlineKeyboard;
 
     private ReplyMarkup() { }
@@ -48,5 +46,6 @@ public class ReplyMarkup
     public InlineKeyboard[][]? InlineKeyboard { get; private set; }
     public bool ResizeKeyboard { get; private set; } = true;
     public bool IsPersistent { get; private set; } = true;
+    public bool RemoveKeyboard { get; set; }
 }
 public record InlineKeyboard(string Text, string CallbackData);
