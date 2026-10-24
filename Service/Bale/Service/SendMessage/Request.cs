@@ -25,12 +25,9 @@ public class SendMessageRequest
         ReplyMarkup = new ReplyMarkup([texts]);
     }
 
-
     public void AddInlineKeyboard(InlineKeyboard[] inlineKeyboards) => new ReplyMarkup([inlineKeyboards]);
 
-
     public void AddRequestContact() => ReplyMarkup = ReplyMarkup.RequestContact;
-
 
 
     public long ChatId { get; }
