@@ -12,9 +12,3 @@ public partial class BaleService:IScoped
         return response?.Response?.Ok == true ? response.Response!.Result ?? [] : [];
     }
 }
-
-public class GetUpdatesResponse
-{
-    public bool Ok { get; set; } = false;
-    public Update[]? Result { get; set; }
-}
