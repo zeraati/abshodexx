@@ -13,10 +13,10 @@ public class WorkflowDispatcher : IScoped
         _flows = flows.ToDictionary(x => x.Flow);
     }
 
-    public async Task<string> Dispatch(Update update, Flow? flow, CancellationToken cancellation)
+    public async Task<SendMessageRequest> Dispatch(Update update, Flow? flow, CancellationToken cancellation)
     {
         if (update.HasMessageText == false)
-            return "برای استفاده از بات دکمه های زیر را انتخاب کنید.";
+            return new SendMessageRequest(update, "برای استفاده از بات دکمه های زیر را انتخاب کنید.");
 
         // first: command
         var selectedButton = update.Message!.SelectedButton<Button>();
@@ -28,7 +28,7 @@ public class WorkflowDispatcher : IScoped
         if (flow != null && _flows.TryGetValue(flow.Value, out var flowHandler))
             return await flowHandler.Handle(update, cancellation);
 
-        
-        return "برای استفاده از بات دکمه های زیر را انتخاب کنید.";
+
+        return new SendMessageRequest(update, "برای استفاده از بات دکمه های زیر را انتخاب کنید.");
     }
 }

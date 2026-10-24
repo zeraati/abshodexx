@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Encodings.Web;
+using System.Text.Json.Serialization;
 
 namespace Common;
 
@@ -14,7 +15,8 @@ public static class Json
     {
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        PropertyNameCaseInsensitive = true
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        PropertyNameCaseInsensitive = true,
     };
 
     public static string? Serialize(object? obj, string? provider = null)

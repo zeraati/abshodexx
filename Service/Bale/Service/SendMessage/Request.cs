@@ -6,7 +6,9 @@ public class SendMessageRequest
 {
     public SendMessageRequest(Update update, string? text)
     {
-        ChatId = update.Message!.Chat.Id;
+        if (update.CallbackQuery != null) ChatId = update.CallbackQuery!.Message!.Chat.Id;
+        else ChatId = update.Message!.Chat.Id;
+
         Text = text;
     }
 
@@ -25,8 +27,6 @@ public class SendMessageRequest
         ReplyMarkup = new ReplyMarkup([texts]);
     }
 
-    public void AddInlineKeyboard(InlineKeyboard[] inlineKeyboards) => new ReplyMarkup([inlineKeyboards]);
-
     public long ChatId { get; }
     public string? Text { get; }
     public ReplyMarkup? ReplyMarkup { get; set; }
@@ -44,8 +44,22 @@ public class ReplyMarkup
     private ReplyMarkup() { }
     public object[][]? Keyboard { get; private set; }
     public InlineKeyboard[][]? InlineKeyboard { get; private set; }
-    public bool ResizeKeyboard { get; private set; } = true;
+    public bool ResizeKeyboard { get; private set; } = false;
     public bool IsPersistent { get; private set; } = true;
-    public bool RemoveKeyboard { get; set; }
+    public bool? RemoveKeyboard { get; set; }
 }
-public record InlineKeyboard(string Text, string CallbackData);
+
+public class InlineKeyboard
+{
+    public InlineKeyboard(string text,string callbackData)
+    {
+        Text=text;
+        CallbackData=callbackData;
+    }
+
+    public static InlineKeyboard Confirm()=>new("✅ تأیید","confirm");
+    public static InlineKeyboard Reject()=>new("❌ رد", "reject");
+
+    public string Text { get; set; }
+    public string CallbackData { get; set; }
+}

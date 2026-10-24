@@ -5,5 +5,5 @@ namespace App.Feature;
 public interface IWorkflowCommandHandler
 {
     Button Button { get; }
-    Task<string> Handle(Update update,CancellationToken cancellation);
+    Task<SendMessageRequest> Handle(Update update,CancellationToken cancellation);
 }

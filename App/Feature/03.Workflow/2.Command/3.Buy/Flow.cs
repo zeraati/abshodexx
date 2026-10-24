@@ -8,9 +8,9 @@ public class BuyFlowHandler(UserStateService userStateService) : IWorkflowFlowHa
 {
     public Flow Flow => Flow.Buy;
 
-    public async Task<string> Handle(Update update, CancellationToken cancellation)
+    public async Task<SendMessageRequest> Handle(Update update, CancellationToken cancellation)
     {
-        var message = "وضعیت خرید نامعتبر است.";
+        var message = new SendMessageRequest(update, "وضعیت خرید نامعتبر است.");
 
         var state = await userStateService.Get(update.Username!, cancellation);
         if (state?.Step == Step.WaitingForEnterGeram) message = await HandleGeram(update, cancellation);
@@ -19,17 +19,22 @@ public class BuyFlowHandler(UserStateService userStateService) : IWorkflowFlowHa
         return message;
     }
 
-    private async Task<string> HandleGeram(Update update, CancellationToken cancellation)
+    private async Task<SendMessageRequest> HandleGeram(Update update, CancellationToken cancellation)
     {
         var geram = (int?)update.Message!.Number;
-        if (geram.GetValueOrDefault() <= 0) return "مقدار نامتعبر است، لطقا مقدار معتبری وارد نمایید";
+        if (geram.GetValueOrDefault() <= 0) 
+            return new SendMessageRequest(update, "مقدار نامتعبر است، لطقا مقدار معتبری وارد نمایید");
 
         var newState=new UserStateCreate(update.Username!, Flow, Step.WaitingForConfirmOrder, geram, 1000);
         await userStateService.Create(newState, cancellation);
-        return $"خرید {geram} گرم به قیمت ۱۰۰۰ تومان\nیک برای تایید عدد یک و برای لغو عدد دو را ارسال کنید";
+
+        var message = new SendMessageRequest(update, $"خرید {geram} گرم به قیمت ۱۰۰۰ تومان\nیک برای تایید عدد یک و برای لغو عدد دو را ارسال کنید");
+        message.ReplyMarkup=new ReplyMarkup([[InlineKeyboard.Confirm(), InlineKeyboard.Reject()]]);
+        var a = Json.Serialize(message);
+        return message;
     }
 
-    private async Task<string> HandleConfirmation(Update update, CancellationToken cancellation)
+    private async Task<SendMessageRequest> HandleConfirmation(Update update, CancellationToken cancellation)
     {
         var confirmed = update.Message!.Text.ToPersianNumber() == "۱";
 
@@ -37,6 +42,7 @@ public class BuyFlowHandler(UserStateService userStateService) : IWorkflowFlowHa
         var newState = new UserStateCreate(update.Username!, Flow, Step.Completed, state!.Geram, 1000);
         await userStateService.Create(newState, cancellation);
 
-        return confirmed? $"{state!.Geram} گرم خریداری شد.":"درخواست خرید تایید نشد.";
+        return new SendMessageRequest(update, "مقدار نامتعبر است، لطقا مقدار معتبری وارد نمایید");
+        //return confirmed? $"{state!.Geram} گرم خریداری شد.":"درخواست خرید تایید نشد.";
     }
 }

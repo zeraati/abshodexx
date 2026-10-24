@@ -55,8 +55,9 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
                     }
 
                     var flow = (await userStateService.Get(update.Username!, stoppingToken))?.Flow;
-                    var reply = await dispatcher.Dispatch(update, flow, stoppingToken);
-                    await baleService.SendMessage(update, reply, [Button.Price, Button.Sell, Button.Buy], stoppingToken);
+                    var message = await dispatcher.Dispatch(update, flow, stoppingToken);
+                    if (message.ReplyMarkup == null) message.AddKeyboard([Button.Price, Button.Sell, Button.Buy]);
+                    await baleService.SendMessage(message, stoppingToken);
                 }
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) { break; }
