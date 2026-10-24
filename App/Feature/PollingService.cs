@@ -32,8 +32,13 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
                         await baleService.SendMessage(update, "لطفاً در پیام‌رسان «بله» برای حساب خود نام کاربری ثبت کنید", stoppingToken);
 
 
-                    var user = userService.Get(update.Username!, stoppingToken);
-                    if (user == null)
+                    var user =await userService.Get(update, stoppingToken);
+                    if (user==null)
+                    {
+                        await userService.Create(update, stoppingToken);
+                    }
+
+                    if (user!.Mobile.Empty())
                     {
                         var mobile = update.Message!.Contact?.PhoneNumber;
 

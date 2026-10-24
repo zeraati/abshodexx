@@ -1,17 +1,19 @@
-﻿using App.Feature.Domain;
+﻿using Bale;
+using App.Feature.Domain;
 
 namespace App.Feature;
 
-public record UserCreate(string Name, string Username, string? Mobile);
-
 public partial class UserService
 {
-    public async Task<User> Create(UserCreate command, CancellationToken cancellation)
+    public async Task<User> Create(Update update, CancellationToken cancellation)
     {
-        var user = await db.Set<User>().SingleOrDefaultAsync(x => x.Username == command.Username,cancellation);
+        var user = await db.Set<User>().SingleOrDefaultAsync(x => x.Username == update.Username,cancellation);
         if (user == null)
         {
-            user = new User(command.Name, command.Username, command.Mobile);
+            var name = update.Message?.From?.Name;
+            var mobile = update.Message?.Contact?.PhoneNumber;
+
+            user = new User(name, update.Username!,mobile);
             db.Set<User>().Add(user);
             await db.SaveChangesAsync(cancellation);
         }
