@@ -9,10 +9,7 @@ public partial class BaleService : IScoped
     public async Task<bool> SendMessage(Update update, string text, CancellationToken cancellation)
     {
         var body = new SendMessageRequest(update, text.ToPersianNumber()!);
-        var request = new HttpClientRequest(HttpMethod.Post, Url.Base, Url.SendMessage) { Body = body };
-        var response = await client.Send<SendMessageResponse>(request, cancellation);
-
-        return response?.Response?.Ok == true;
+        return await SendRequest(body, cancellation);
     }
 
     public async Task<bool> SendMessage<TButton>(Update update, string text, TButton[] buttons, CancellationToken cancellation) where TButton : struct, Enum
@@ -20,6 +17,11 @@ public partial class BaleService : IScoped
         var body = new SendMessageRequest(update, text.ToPersianNumber()!);
         body.AddButton(buttons);
 
+        return await SendRequest(body, cancellation);
+    }
+
+    private async Task<bool> SendRequest(SendMessageRequest body, CancellationToken cancellation)
+    {
         var request = new HttpClientRequest(HttpMethod.Post, Url.Base, Url.SendMessage) { Body = body };
         var response = await client.Send<SendMessageResponse>(request, cancellation);
 
