@@ -10,16 +10,40 @@ public class SendMessageRequest
         Text = text;
     }
 
-    public void AddButton<TButton>(TButton[] buttons) where TButton : struct, Enum
+    public void AddKeyboard<TButton>(TButton[] buttons) where TButton : struct, Enum
     {
-        var labels = buttons.Select(x => MessageResource.ResourceManager.GetString(x.ToString())!).ToArray();
-        ReplyMarkup = new ReplyMarkup([labels]);
+        var texts = buttons.Select(x => MessageResource.ResourceManager.GetString(x.ToString())!).ToArray();
+
+        for (int i = 0; i < texts.Length; i++)
+        {
+            if (texts[i] == "خرید") texts[i] = "➕ خرید";
+            if (texts[i] == "فروش") texts[i] = "➖ فروش";
+            if (texts[i] == "قیمت") texts[i] = "💰 قیمت";
+        }
+
+        ReplyMarkup = new ReplyMarkup([texts]);
     }
+
+    public void AddInlineKeyboard(InlineKeyboard[] inlineKeyboards) => new ReplyMarkup([inlineKeyboards]);
+
+    public void AddRequestContact() => ReplyMarkup = ReplyMarkup.RequestContact;
 
 
     public long ChatId { get; }
     public string Text { get; }
-    public ReplyMarkup? ReplyMarkup { get; private set; }
+    public ReplyMarkup? ReplyMarkup { get; set; }
 }
 
-public record ReplyMarkup(string[][] Keyboard, bool ResizeKeyboard = true, bool IsPersistent = true);
+public class ReplyMarkup
+{
+    public ReplyMarkup(string[][] keyboard) => Keyboard = keyboard;
+    public static ReplyMarkup RequestContact => new ReplyMarkup { Keyboard = [[new { Text = "📱 ارسال شماره", RequestContact = true }]] };
+    public ReplyMarkup(InlineKeyboard[][] inlineKeyboard) => InlineKeyboard = inlineKeyboard;
+
+    private ReplyMarkup() { }
+    public object[][]? Keyboard { get; private set; }
+    public InlineKeyboard[][]? InlineKeyboard { get; private set; }
+    public bool ResizeKeyboard { get; private set; } = true;
+    public bool IsPersistent { get; private set; } = true;
+}
+public record InlineKeyboard(string Text, string CallbackData);

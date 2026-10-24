@@ -12,6 +12,8 @@ public class Message
 
     public Chat Chat { get; set; } = null!;
 
+    public Contact? Contact { get; set; }
+
     private string? _text;
     public string? Text
     {
