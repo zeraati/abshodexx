@@ -10,6 +10,7 @@ public class SendMessageRequest
         Text = text;
     }
 
+
     public void AddKeyboard<TButton>(TButton[] buttons) where TButton : struct, Enum
     {
         var texts = buttons.Select(x => MessageResource.ResourceManager.GetString(x.ToString())!).ToArray();
@@ -24,15 +25,20 @@ public class SendMessageRequest
         ReplyMarkup = new ReplyMarkup([texts]);
     }
 
+
     public void AddInlineKeyboard(InlineKeyboard[] inlineKeyboards) => new ReplyMarkup([inlineKeyboards]);
 
+
     public void AddRequestContact() => ReplyMarkup = ReplyMarkup.RequestContact;
+
 
 
     public long ChatId { get; }
     public string Text { get; }
     public ReplyMarkup? ReplyMarkup { get; set; }
 }
+
+
 
 public class ReplyMarkup
 {
