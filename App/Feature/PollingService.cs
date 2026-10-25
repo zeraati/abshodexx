@@ -27,23 +27,8 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
                 foreach (var update in updates)
                 {
                     offset = update.UpdateId + 1;
-                    await baleService.RemoveKeyboard(update, stoppingToken);
 
-              
-
-                    var user = await userService.Get(update, stoppingToken);
-                    if ()
-                    {
-                        continue;
-                    }
-
-                    if (user!.Mobile.Empty())
-                    {
-                        
-                    }
-
-                    var flow = (await userStateService.Get(update.Username!, stoppingToken))?.Flow;
-                    flow =await GetFlow(update,userService,stoppingToken);
+                    var flow =await GetFlow(update,userService,userStateService,stoppingToken);
                     var message = await dispatcher.Dispatch(update, flow, stoppingToken);
                     if (message.ReplyMarkup == null) message.AddKeyboard([Button.Price, Button.Sell, Button.Buy]);
                     await baleService.SendMessage(message, stoppingToken);
@@ -54,7 +39,7 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
         }
     }
 
-    private async Task<Flow?> GetFlow(Update update, UserService userService,CancellationToken cancellation)
+    private async Task<Flow?> GetFlow(Update update, UserService userService,UserStateService userStateService,CancellationToken cancellation)
     {
         if (update.Username == null) return Flow.SetUsername;
 
@@ -64,10 +49,6 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
         user = await userService.Get(update, cancellation);
         if (user!.Mobile.Empty()) return Flow.SetMobile;
 
-        if (update.Username == null) return Flow.SetUsername;
-        if (update.Message?.Text == "خرید") return Flow.Buy;
-        if (update.Message?.Text == "فروش") return Flow.Sell;
-        if (update.Message?.Text == "قیمت") return null;
-        return null;
+        return (await userStateService.Get(update.Username!, cancellation))?.Flow;
     }
 }
