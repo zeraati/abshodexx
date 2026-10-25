@@ -1,7 +1,7 @@
 ﻿using Bale;
 using App.Feature;
 
-namespace App;
+namespace App.Feature;
 
 public class MainMenuFlowHandler : IWorkflowFlowHandler
 {

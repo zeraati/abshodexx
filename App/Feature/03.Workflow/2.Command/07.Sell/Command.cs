@@ -1,5 +1,5 @@
 ﻿using Bale;
-namespace App;
+namespace App.Feature;
 using App.Feature;
 
 public class SellCommandHandler(UserStateService userStateService) : IWorkflowCommandHandler

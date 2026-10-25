@@ -1,6 +1,6 @@
 ﻿using Bale;
 using Baha24;
-namespace App;
+namespace App.Feature;
 using App.Feature;
 using Common.Util;
 

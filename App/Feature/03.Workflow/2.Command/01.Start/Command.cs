@@ -1,7 +1,6 @@
 ﻿using Bale;
-namespace App;
-using App.Feature;
 
+namespace App.Feature;
 
 public class StartCommandHandler: IWorkflowCommandHandler
 {

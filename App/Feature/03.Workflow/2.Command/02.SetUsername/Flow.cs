@@ -1,7 +1,6 @@
 ﻿using Bale;
-using App.Feature;
 
-namespace App;
+namespace App.Feature;
 
 public class SetUsernameFlowHandler(BaleService baleService) : IWorkflowFlowHandler
 {

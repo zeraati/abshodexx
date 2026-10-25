@@ -2,7 +2,7 @@
 using App.Feature;
 using Common.Extension;
 
-namespace App;
+namespace App.Feature;
 
 public class SetMobileFlowHandler(UserService userService) : IWorkflowFlowHandler
 {

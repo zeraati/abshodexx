@@ -3,7 +3,7 @@ using App.Feature.Domain;
 using Bale;
 using Common.Extension;
 
-namespace App;
+namespace App.Feature;
 
 public class SellFlowHandler(UserStateService userStateService) : IWorkflowFlowHandler
 {
