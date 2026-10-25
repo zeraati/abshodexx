@@ -30,7 +30,6 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
 
                     var flow =await GetFlow(update,userService,userStateService,stoppingToken);
                     var message = await dispatcher.Dispatch(update, flow, stoppingToken);
-                    if (message.ReplyMarkup == null) message.AddKeyboard([Button.Price, Button.Sell, Button.Buy]);
                     await baleService.SendMessage(message, stoppingToken);
                 }
             }
@@ -49,6 +48,7 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
         user = await userService.Get(update, cancellation);
         if (user!.Mobile.Empty()) return Flow.SetMobile;
 
-        return (await userStateService.Get(update.Username!, cancellation))?.Flow;
+        var userStateFlow= (await userStateService.Get(update.Username!, cancellation))?.Flow;
+        return userStateFlow ?? Flow.MainMenu;
     }
 }

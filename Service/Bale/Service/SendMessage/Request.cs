@@ -1,6 +1,4 @@
-﻿using Common;
-
-namespace Bale;
+﻿namespace Bale;
 
 public class SendMessageRequest
 {
@@ -10,21 +8,6 @@ public class SendMessageRequest
         else ChatId = update.Message!.Chat.Id;
 
         Text = text;
-    }
-
-
-    public void AddKeyboard<TButton>(TButton[] buttons) where TButton : struct, Enum
-    {
-        var texts = buttons.Select(x => MessageResource.ResourceManager.GetString(x.ToString())!).ToArray();
-
-        for (int i = 0; i < texts.Length; i++)
-        {
-            if (texts[i] == "خرید") texts[i] = "➕ خرید";
-            if (texts[i] == "فروش") texts[i] = "➖ فروش";
-            if (texts[i] == "قیمت") texts[i] = "💰 قیمت";
-        }
-
-        ReplyMarkup = new ReplyMarkup([texts]);
     }
 
     public long ChatId { get; }
