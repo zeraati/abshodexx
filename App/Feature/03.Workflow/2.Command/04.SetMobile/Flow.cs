@@ -10,7 +10,7 @@ public class SetMobileFlowHandler(UserService userService) : IWorkflowFlowHandle
 
     public async Task<SendMessageRequest> Handle(Update update, CancellationToken cancellation)
     {
-        var mobile = update.Message!.Contact?.PhoneNumber;
+        var mobile = update.EffectiveMessage!.Contact?.PhoneNumber;
         if (mobile.Empty() == true)
         {
             var message = new SendMessageRequest(update, "شماره موبایل خود را ارسال کنید")

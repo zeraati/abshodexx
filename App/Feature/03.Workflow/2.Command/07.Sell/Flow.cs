@@ -22,7 +22,7 @@ public class SellFlowHandler(UserStateService userStateService) : IWorkflowFlowH
 
     private async Task<SendMessageRequest> HandleGeram(Update update, CancellationToken cancellation)
     {
-        var geram = (int?)update.Message!.Number;
+        var geram = (int?)update.EffectiveMessage!.Number;
         if (geram.GetValueOrDefault() <= 0)
             return new SendMessageRequest(update, "مقدار نامتعبر است، لطقا مقدار معتبری وارد نمایید");
 
@@ -31,13 +31,12 @@ public class SellFlowHandler(UserStateService userStateService) : IWorkflowFlowH
 
         var message = new SendMessageRequest(update, $"فروش {geram} گرم به قیمت ۱۰۰۰ تومان\nیک برای تایید عدد یک و برای لغو عدد دو را ارسال کنید");
         message.ReplyMarkup = new ReplyMarkup([[InlineKeyboard.Confirm(), InlineKeyboard.Reject()]]);
-        var a = Json.Serialize(message);
         return message;
     }
 
     private async Task<SendMessageRequest> HandleConfirmation(Update update, CancellationToken cancellation)
     {
-        var confirmed = update.Message!.Text.ToPersianNumber() == "۱";
+        var confirmed = update.EffectiveMessage!.Text.ToPersianNumber() == "۱";
 
         var state = await userStateService.Get(update.Username!, cancellation);
         var newState = new UserStateCreate(update.Username!, Flow, Step.Completed, state!.Geram, 1000);

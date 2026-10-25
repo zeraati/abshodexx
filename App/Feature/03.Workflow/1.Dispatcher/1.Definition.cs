@@ -13,7 +13,7 @@ public enum Flow
     SetUsername,
     CreateUser,
     SetMobile,
-    MainMenu,
+    Start,
     Sell,
     Buy
 }

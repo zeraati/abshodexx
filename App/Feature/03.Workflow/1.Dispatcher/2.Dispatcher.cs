@@ -19,7 +19,7 @@ public class WorkflowDispatcher : IScoped
             return new SendMessageRequest(update, "برای استفاده از بات دکمه های زیر را انتخاب کنید.");
 
         // first: command
-        var selectedButton = update.Message!.SelectedButton<Button>();
+        var selectedButton = update.EffectiveMessage!.SelectedButton<Button>();
         if (selectedButton.HasValue && _commadns.TryGetValue(selectedButton.Value, out var commandHandler))
             return await commandHandler.Handle(update, cancellation);
 

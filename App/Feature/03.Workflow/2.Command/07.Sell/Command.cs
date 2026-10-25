@@ -1,10 +1,10 @@
 ﻿using Bale;
+
 namespace App.Feature;
-using App.Feature;
 
 public class SellCommandHandler(UserStateService userStateService) : IWorkflowCommandHandler
 {
-    public Button Button => Button.Buy;
+    public Button Button => Button.Sell;
 
     public async Task<SendMessageRequest> Handle(Update update, CancellationToken cancellation)
     {

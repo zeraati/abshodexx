@@ -4,9 +4,7 @@ public class SendMessageRequest
 {
     public SendMessageRequest(Update update, string? text)
     {
-        if (update.CallbackQuery != null) ChatId = update.CallbackQuery!.Message!.Chat.Id;
-        else ChatId = update.Message!.Chat.Id;
-
+        ChatId = update.EffectiveMessage!.Chat.Id;
         Text = text;
     }
 
@@ -20,8 +18,8 @@ public class SendMessageRequest
 public class ReplyMarkup
 {
     public ReplyMarkup(string[][] keyboard) => Keyboard = keyboard;
-    public static ReplyMarkup RemoveKey => new ReplyMarkup { RemoveKeyboard= true};
-    public static ReplyMarkup RequestContact => new ReplyMarkup { Keyboard = [[new { Text = "📱 ارسال شماره موبایل", RequestContact = true }]] };
+    public static ReplyMarkup RemoveKey => new () { RemoveKeyboard= true};
+    public static ReplyMarkup RequestContact => new (){ Keyboard = [[new { Text = "📱 ارسال شماره موبایل", RequestContact = true }]] };
     public ReplyMarkup(InlineKeyboard[][] inlineKeyboard) => InlineKeyboard = inlineKeyboard;
 
     private ReplyMarkup() { }

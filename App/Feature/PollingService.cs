@@ -38,7 +38,7 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
         }
     }
 
-    private async Task<Flow?> GetFlow(Update update, UserService userService,UserStateService userStateService,CancellationToken cancellation)
+    private static async Task<Flow?> GetFlow(Update update, UserService userService,UserStateService userStateService,CancellationToken cancellation)
     {
         if (update.Username == null) return Flow.SetUsername;
 
@@ -49,6 +49,6 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
         if (user!.Mobile.Empty()) return Flow.SetMobile;
 
         var userStateFlow= (await userStateService.Get(update.Username!, cancellation))?.Flow;
-        return userStateFlow ?? Flow.MainMenu;
+        return userStateFlow ?? Flow.Start;
     }
 }
