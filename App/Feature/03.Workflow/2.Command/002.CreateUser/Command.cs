@@ -2,9 +2,9 @@
 
 namespace App.Feature;
 
-public class CreateUserFlowHandler(UserService userService) : IWorkflowFlowHandler
+public class CreateUserCommandHandler(UserService userService) : IWorkflowCommandHandler
 {
-    public Flow Flow => Flow.CreateUser;
+    public Button Button => Button.CreateUser;
 
     public async Task<SendMessageRequest> Handle(Update update, CancellationToken cancellation)
     {

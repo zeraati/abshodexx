@@ -8,7 +8,7 @@ public class StartCommandHandler(UserStateService userStateService): IWorkflowCo
 
     public async Task<SendMessageRequest> Handle(Update update, CancellationToken cancellation)
     {
-        await userStateService.Create(new UserStateCreate(update.Username!, Flow.Start, Step.Completed,null,null), cancellation);
+        await userStateService.Create(new UserStateCreate(update.Username!, null, Step.Completed,null,null), cancellation);
 
         var buy = new InlineKeyboard("➕ خرید", Button.Buy.ToString());
         var sell = new InlineKeyboard("➖ فروش", Button.Sell.ToString());

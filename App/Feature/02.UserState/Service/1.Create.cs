@@ -2,7 +2,7 @@
 
 namespace App.Feature;
 
-public record UserStateCreate(string Username, Flow Flow, Step Step, int? Geram, decimal? Price);
+public record UserStateCreate(string Username, Flow? Flow, Step? Step, int? Geram, decimal? Price);
 
 public partial class UserStateService
 {

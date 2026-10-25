@@ -7,8 +7,8 @@ public partial class UserState : BaseEntity
     private UserState(){ }
     public string Username { get; set; } = null!;
 
-    public Flow Flow { get; private set; }
-    public Step Step { get; private set; }
+    public Flow? Flow { get; private set; }
+    public Step? Step { get; private set; }
     public int? Geram { get; private set; }
     public decimal? Price { get; private set; }
 }

@@ -18,8 +18,13 @@ public class Message
     public long? Number => long.TryParse(Text, out var number) ? number : null;
     public decimal? Decimal => decimal.TryParse(Text, out var number) ? number : null;
 
+
+    private object? _button { get; set; }
+    public void SetButton<TButton>(TButton button) => _button = button;
     public TButton? SelectedButton<TButton>() where TButton :struct, Enum
     {
+        if (_button != null) return (TButton)_button;
+
         if (Text.Empty()) return null;
         var buttonText = Text!.Replace("/start","start");
 
@@ -27,5 +32,9 @@ public class Message
 
         return null;
     }
+
+    private object? _flow { get; set; }
+    public void SetFlow<TFlow>(TFlow? flow) => _flow = flow;
+    public TFlow? Flow<TFlow>() where TFlow : struct, Enum => (TFlow?)_flow;
 }
 

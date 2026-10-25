@@ -28,8 +28,8 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
                 {
                     offset = update.UpdateId + 1;
 
-                    var flow =await GetFlow(update,userService,userStateService,stoppingToken);
-                    var message = await dispatcher.Dispatch(update, flow, stoppingToken);
+                    await SetCommandAndFlow(update, userService, userStateService, stoppingToken);
+                    var message = await dispatcher.Dispatch(update, stoppingToken);
                     await baleService.SendMessage(message, stoppingToken);
                 }
             }
@@ -38,17 +38,52 @@ public sealed class PollingService(IServiceScopeFactory factory, ILogger<Polling
         }
     }
 
-    private static async Task<Flow?> GetFlow(Update update, UserService userService,UserStateService userStateService,CancellationToken cancellation)
+    private static async Task SetCommandAndFlow(Update update, UserService userService, UserStateService userStateService, CancellationToken cancellation)
     {
-        if (update.Username == null) return Flow.SetUsername;
+
+        if (update.HasMessageText == false)
+        {
+            update.EffectiveMessage!.SetButton(Button.Start);
+            update.EffectiveMessage!.SetFlow<Flow?>(null);
+            return;
+        }
+
+        if (update.Username == null)
+        {
+            update.EffectiveMessage!.SetButton(Button.SetUsername);
+            update.EffectiveMessage!.SetFlow<Flow?>(null);
+            return;
+        }
 
         var user = await userService.Get(update, cancellation);
-        if (user == null) return Flow.CreateUser;
+        if (user == null)
+        {
+            update.EffectiveMessage!.SetButton(Button.CreateUser);
+            update.EffectiveMessage!.SetFlow<Flow?>(null);
+            return;
+        }
 
-        user = await userService.Get(update, cancellation);
-        if (user!.Mobile.Empty()) return Flow.SetMobile;
+        var phoneNumber = update.EffectiveMessage?.Contact?.PhoneNumber;
+        if (user!.Mobile.Empty() && phoneNumber.Empty())
+        {
+            update.EffectiveMessage!.SetButton(Button.RequestContact);
+            update.EffectiveMessage!.SetFlow<Flow?>(null);
+            return;
+        }
 
-        var userStateFlow= (await userStateService.Get(update.Username!, cancellation))?.Flow;
-        return userStateFlow ?? Flow.Start;
+        if (user!.Mobile.Empty() && phoneNumber.Empty()==false)
+        {
+            update.EffectiveMessage!.SetButton(Button.SetMobile);
+            update.EffectiveMessage!.SetFlow<Flow?>(null);
+            return;
+        }
+
+        var userStateFlow = (await userStateService.Get(update.Username!, cancellation))?.Flow;
+        if (userStateFlow == null)
+        {
+            update.EffectiveMessage!.SetButton(Button.Start);
+            update.EffectiveMessage!.SetFlow<Flow?>(null);
+            return;
+        }
     }
 }

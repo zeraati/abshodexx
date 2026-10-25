@@ -2,18 +2,19 @@ namespace App.Feature;
 
 public enum Button
 {
+    SetUsername,
     Start,
+    CreateUser,
+    RequestContact,
+    SetMobile,
+    
+    Price,
     Buy,
     Sell,
-    Price
 }
 
 public enum Flow
 {
-    SetUsername,
-    CreateUser,
-    SetMobile,
-    Start,
     Sell,
     Buy
 }

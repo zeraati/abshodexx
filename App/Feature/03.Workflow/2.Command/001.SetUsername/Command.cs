@@ -2,9 +2,9 @@
 
 namespace App.Feature;
 
-public class SetUsernameFlowHandler(BaleService baleService) : IWorkflowFlowHandler
+public class SetUsernameCommandHandler: IWorkflowCommandHandler
 {
-    public Flow Flow => Flow.SetUsername;
+    public Button Button => Button.SetUsername;
 
     public async Task<SendMessageRequest> Handle(Update update, CancellationToken cancellation)
     {
