@@ -10,6 +10,9 @@ public enum Button
 
 public enum Flow
 {
+    SetUsername,
+    CreateUser,
+    SetMobile,
     Sell,
     Buy
 }
