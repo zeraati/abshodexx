@@ -9,6 +9,6 @@ public partial class BaleService:IScoped
     {
         var request = new HttpClientRequest(HttpMethod.Get, Url.Base, Url.GetUpdates(offset));
         var response = await client.Send<GetUpdatesResponse>(request, cancellation);
-        return response?.Response?.Ok == true ? response.Response!.Result ?? [] : [];
+        return response?.Response?.Ok == true ? response.Response.Result ?? [] : [];
     }
 }
