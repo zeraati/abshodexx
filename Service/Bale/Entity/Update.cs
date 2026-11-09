@@ -10,6 +10,7 @@ public class Update
     public CallbackQuery? CallbackQuery { get; init; }
     public PreCheckoutQuery? PreCheckoutQuery { get; init; }
 
-    public string? Username => Message?.From?.Username;
-    public bool HasMessageText => Message?.Text.Empty() == false;
+    public Message? EffectiveMessage => Message ?? CallbackQuery?.Message;
+    public string? Username => EffectiveMessage?.From?.Username;
+    public bool HasMessageText => EffectiveMessage?.Text.Empty() == false;
 }

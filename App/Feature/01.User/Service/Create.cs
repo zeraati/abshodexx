@@ -10,8 +10,8 @@ public partial class UserService
         var user = await db.Set<User>().SingleOrDefaultAsync(x => x.Username == update.Username,cancellation);
         if (user == null)
         {
-            var name = update.Message?.From?.Name;
-            var mobile = update.Message?.Contact?.PhoneNumber;
+            var name = update.EffectiveMessage?.From?.Name;
+            var mobile = update.EffectiveMessage?.Contact?.PhoneNumber;
 
             user = new User(name, update.Username!,mobile);
             db.Set<User>().Add(user);

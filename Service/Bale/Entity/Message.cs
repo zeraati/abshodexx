@@ -1,6 +1,5 @@
-using Common;
-using Common.Extension;
 namespace Bale;
+using Common.Extension;
 
 public class Message
 {
@@ -19,17 +18,23 @@ public class Message
     public long? Number => long.TryParse(Text, out var number) ? number : null;
     public decimal? Decimal => decimal.TryParse(Text, out var number) ? number : null;
 
+
+    private object? _button { get; set; }
+    public void SetButton<TButton>(TButton button) => _button = button;
     public TButton? SelectedButton<TButton>() where TButton :struct, Enum
     {
-        var label = Text?.Trim()?.Replace("➕ ", "").Replace("➖ ", "").Replace("💰 ", "");
-        var resourceKey = MessageResource.ResourceManager.ResourceKey(label);
-        if (resourceKey.Empty()) return null;
+        if (_button != null) return (TButton)_button;
 
-        resourceKey = resourceKey!.Replace("start", "/start");
+        if (Text.Empty()) return null;
+        var buttonText = Text!.Replace("/start","start");
 
-        if (Enum.TryParse<TButton>(resourceKey, true, out var button)) return button;
+        if (Enum.TryParse<TButton>(buttonText, true, out var button)) return button;
 
         return null;
     }
+
+    private object? _flow { get; set; }
+    public void SetFlow<TFlow>(TFlow? flow) => _flow = flow;
+    public TFlow? Flow<TFlow>() where TFlow : struct, Enum => (TFlow?)_flow;
 }
 

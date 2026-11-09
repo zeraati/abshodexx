@@ -12,17 +12,12 @@ public partial class BaleService : IScoped
         return await SendMessage(body, cancellation);
     }
 
-    public async Task<bool> RequestContact(Update update, string text, CancellationToken cancellation)
-    {
-        var body = new SendMessageRequest(update, text.ToPersianNumber());
-        body.ReplyMarkup=ReplyMarkup.RequestContact;
-        return await SendMessage(body, cancellation);
-    }
-
     public async Task<bool> RemoveKeyboard(Update update, CancellationToken cancellation)
     {
-        var body = new SendMessageRequest(update,null);
-        body.ReplyMarkup = ReplyMarkup.RemoveKey;
+        var body = new SendMessageRequest(update, null)
+        {
+            ReplyMarkup = ReplyMarkup.RemoveKey
+        };
         return await SendMessage(body, cancellation);
     }
 
